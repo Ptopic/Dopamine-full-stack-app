@@ -10,6 +10,7 @@ import ForgotPassword from '@Screens/ForgotPassword';
 import HomeScreen from '@Screens/HomeScreen';
 import StarterScreen from '@Screens/StarterScreen';
 import SignUp from '@Screens/SignUp';
+import EmailConfirmationScreen from '@Screens/EmailConfirmationScreen';
 import Steps from '@Screens/Steps';
 import PhoneNumber from '@Screens/PhoneNumber';
 import Name from '@Screens/Name';
@@ -33,7 +34,7 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer theme={navTheme}>
 					{/* initialRouteName is set to Test for redux testing purposesinitialRouteName */}
-					<Stack.Navigator initialRouteName="Login">
+					<Stack.Navigator initialRouteName="DateOfBirth">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"
@@ -53,6 +54,11 @@ export default function App() {
 							options={{ headerShown: false }}
 							name="SignUp"
 							component={SignUp}
+						/>
+						<Stack.Screen
+							options={{ headerShown: false }}
+							name="EmailConfirmationScreen"
+							component={EmailConfirmationScreen}
 						/>
 						<Stack.Screen
 							options={{ headerShown: false }}

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
 	userId: '',
+	email: '',
 };
 
 export const credentialsReducer = createSlice({
@@ -11,10 +12,12 @@ export const credentialsReducer = createSlice({
 		reset: (state) => {
 			// Keep user id
 			state.userId = '';
+			state.email = '';
 		},
 		setCredentials: (state, action) => {
-			const newId = action.payload;
+			const { newId, email } = action.payload;
 			state.userId = newId;
+			state.email = email;
 		},
 	},
 });

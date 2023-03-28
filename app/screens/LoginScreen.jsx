@@ -9,6 +9,8 @@ import {
 	Animated,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
+
+// Firebase
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseConfig } from '../firebase';
 import { initializeApp } from '@firebase/app';
@@ -31,60 +33,14 @@ const LoginScreen = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
+	const credentialsObj = {
+		userId: '',
+		email: '',
+	};
 	const credentials = useSelector(selectCredentials);
 	const dispatch = useDispatch();
 
 	const navigation = useNavigation();
-
-	const shakeEmail = useRef(new Animated.Value(0)).current;
-	const shakePassword = useRef(new Animated.Value(0)).current;
-
-	const shakeAnimEmail = () => {
-		// Will change fadeAnim value to 1 in 5 seconds
-		Animated.sequence([
-			Animated.timing(shakeEmail, {
-				toValue: 10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-			Animated.timing(shakeEmail, {
-				toValue: -10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-			Animated.timing(shakeEmail, {
-				toValue: 10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-			Animated.timing(shakeEmail, {
-				toValue: 0,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-		]).start();
-	};
-
-	const shakeAnimPassword = () => {
-		// Will change fadeAnim value to 1 in 5 seconds
-		Animated.sequence([
-			Animated.timing(shakePassword, {
-				toValue: 10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-			Animated.timing(shakePassword, {
-				toValue: -10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-			Animated.timing(shakePassword, {
-				toValue: 10,
-				duration: 100,
-				useNativeDriver: true,
-			}),
-		]).start();
-	};
 
 	// If user is logedin switch to home page
 	useEffect(() => {
@@ -100,16 +56,13 @@ const LoginScreen = () => {
 	const auth = getAuth(app);
 
 	const handleLogIn = () => {
-		console.log(credentials);
-		// dispatch(reset());
-
 		signInWithEmailAndPassword(auth, email, password)
 			.then((userCredentials) => {
 				const user = userCredentials.user;
-				console.log('Logged in with', user.uid);
 
-				dispatch(setCredentials(user.uid));
-				console.log(credentials);
+				credentialsObj.userId = user.uid;
+				credentialsObj.email = user.email;
+				dispatch(setCredentials(credentialsObj));
 
 				// Delete user email and password from state keep only user id
 			})
@@ -117,12 +70,10 @@ const LoginScreen = () => {
 				console.log(error.code);
 				switch (error.code) {
 					case 'auth/invalid-email':
-						shakeAnimEmail();
 						alert('Invalid email!');
 						break;
 					case 'auth/internal-error':
 						// Add shake effect for form and color it red for 1 second
-						shakeAnimPassword();
 						alert('Please enter a password!');
 						break;
 					case 'auth/too-many-requests':
@@ -130,13 +81,10 @@ const LoginScreen = () => {
 						break;
 					case 'auth/wrong-password':
 						// Add shake effect for form and color it red for 1 second
-						shakeAnimPassword();
 						alert('Wrong password');
 						break;
 					case 'auth/user-not-found':
 						// Add shake effect for form and color it red for 1 second
-						shakeAnimEmail();
-						shakeAnimPassword();
 						alert('Invalid email or password');
 						break;
 				}
@@ -148,7 +96,7 @@ const LoginScreen = () => {
 			<Header route={'Starter'} color={'#0782F9'} />
 			<View style={styles.container}>
 				<View style={styles.headerContainer}>
-					<Animated.Text
+					<Text
 						style={{
 							fontSize: 25,
 							fontWeight: 'bold',
@@ -156,18 +104,11 @@ const LoginScreen = () => {
 						}}
 					>
 						Welcome back
-					</Animated.Text>
+					</Text>
 
 					<Text>Please enter your details.</Text>
 				</View>
-				<Animated.View
-					style={[
-						styles.inputView,
-						{
-							transform: [{ translateX: shakeEmail }],
-						},
-					]}
-				>
+				<View style={[styles.inputView]}>
 					<MaterialIcons
 						name="alternate-email"
 						size={20}
@@ -181,16 +122,9 @@ const LoginScreen = () => {
 						keyboardType={'email-address'}
 						style={{ flex: 1, paddingVertical: 0 }}
 					/>
-				</Animated.View>
+				</View>
 
-				<Animated.View
-					style={[
-						styles.inputView,
-						{
-							transform: [{ translateX: shakePassword }],
-						},
-					]}
-				>
+				<Animated.View style={[styles.inputView]}>
 					<Feather
 						name="lock"
 						size={20}

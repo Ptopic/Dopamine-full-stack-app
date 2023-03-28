@@ -17,8 +17,10 @@ import Feather from 'react-native-vector-icons/Feather';
 // Components
 import Header from '@Components/Header';
 import Button from '@Components/Button';
+import InputField from '@Components/InputField';
 
 const Name = () => {
+	const [name, setName] = useState('');
 	const next = () => {
 		navigation.replace('DateOfBirth');
 	};
@@ -55,6 +57,20 @@ const Name = () => {
 						So that we know how to call you.
 					</Text>
 				</View>
+
+				<InputField
+					label={'Enter a username'}
+					value={name}
+					setValue={setName}
+					icon={
+						<Feather
+							name="user"
+							size={20}
+							color="#666"
+							style={{ marginRight: 5 }}
+						/>
+					}
+				></InputField>
 
 				<View style={styles.buttonContainer}>
 					<Button

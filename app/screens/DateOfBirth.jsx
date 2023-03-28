@@ -20,11 +20,18 @@ import Header from '@Components/Header';
 import Button from '@Components/Button';
 
 const DateOfBirth = () => {
+	const [date, setDate] = useState(new Date(Date.now()));
 	const next = () => {
 		navigation.replace('Country');
 	};
 
 	const navigation = useNavigation();
+
+	const onChange = (event, value) => {
+		const stringValue = JSON.stringify(value);
+		const onlyDate = stringValue.match('[0-9]{4}-[0-9]{2}-[0-9]{2}')[0];
+		setDate(onlyDate);
+	};
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -59,8 +66,13 @@ const DateOfBirth = () => {
 
 				<View style={{ marginBottom: 15 }}>
 					{/* Date picker */}
-					{/* <Text>What's your date of birth?</Text> */}
-					<DateTimePicker mode="date" value={new Date()} display="spinner" />
+					<Text>Select your date of birth?</Text>
+					<DateTimePicker
+						mode="date"
+						value={date}
+						onChange={onChange}
+						display="spinner"
+					/>
 				</View>
 
 				<View style={styles.buttonContainer}>

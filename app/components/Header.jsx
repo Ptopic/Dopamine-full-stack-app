@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Header = ({ route, color, title }) => {
+const Header = ({ route, color, title, backgroundColor }) => {
 	const navigation = useNavigation();
 
 	const back = () => {
@@ -15,6 +15,7 @@ const Header = ({ route, color, title }) => {
 				flexDirection: 'row',
 				alignItems: 'center',
 				paddingHorizontal: 15,
+				backgroundColor: backgroundColor,
 			}}
 		>
 			<TouchableOpacity style={styles.backButton} onPress={back}>

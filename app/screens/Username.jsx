@@ -17,9 +17,13 @@ import Feather from 'react-native-vector-icons/Feather';
 // Components
 import Header from '@Components/Header';
 import Button from '@Components/Button';
+import InputField from '@Components/InputField';
 
 const Username = () => {
+	const [username, setUsername] = useState('');
+
 	const next = () => {
+		// Add username to global userInfo redux reducer
 		navigation.replace('PhoneNumber');
 	};
 
@@ -36,7 +40,7 @@ const Username = () => {
 						paddingBottom: 120,
 					}}
 				>
-					<Animated.Text
+					<Text
 						style={{
 							fontSize: 25,
 							fontWeight: 'bold',
@@ -44,18 +48,22 @@ const Username = () => {
 						}}
 					>
 						Choose a username for your account
-					</Animated.Text>
-
-					<Text
-						style={{
-							fontSize: 14,
-							marginBottom: 10,
-						}}
-					>
-						if you are not comfortable with it you can skip it.
 					</Text>
 				</View>
 
+				<InputField
+					label={'Enter a username'}
+					value={username}
+					setValue={setUsername}
+					icon={
+						<Feather
+							name="user"
+							size={20}
+							color="#666"
+							style={{ marginRight: 5 }}
+						/>
+					}
+				></InputField>
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"

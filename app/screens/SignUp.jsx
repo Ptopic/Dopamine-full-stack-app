@@ -11,11 +11,13 @@ import React, { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
 
 // Firebase
-import { auth } from '../firebase';
+import { firebaseConfig } from '../firebase';
+import { initializeApp } from '@firebase/app';
 import {
 	createUserWithEmailAndPassword,
 	sendEmailVerification,
 	updateProfile,
+	getAuth,
 } from 'firebase/auth';
 
 // Icons
@@ -26,12 +28,26 @@ import Feather from 'react-native-vector-icons/Feather';
 import Header from '@Components/Header';
 import Button from '@Components/Button';
 
+// Redux states
+
+import { useSelector, useDispatch } from 'react-redux';
+import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
+import { selectCredentials } from '@Redux/slices/credentialsReducer';
+
 const SignUp = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+	const app = initializeApp(firebaseConfig);
+	const auth = getAuth(app);
 
-	const shakeEmail = useRef(new Animated.Value(0)).current;
+	const credentialsObj = {
+		userId: '',
+		email: '',
+	};
+
+	const credentials = useSelector(selectCredentials);
+	const dispatch = useDispatch();
 
 	// const handleSignUp = () => {
 	// 	createUserWithEmailAndPassword(auth, email, password)
@@ -48,44 +64,48 @@ const SignUp = () => {
 	// 		});
 	// };
 
-	const handleSignUp = async () => {
+	const handleSignUp = () => {
 		// Check if all form data is entered then try to sign up and redirect
-		console.log(email);
-		console.log(password);
-		console.log(confirmPassword);
+		// console.log(email);
+		// console.log(password);
+		// console.log(confirmPassword);
 
-		// Check if email is in right format
-		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-			// If password is not same enter same password
-			if (password != confirmPassword) {
-				alert(
-					'Please make sure that password and confirm password are matching.'
-				);
-			} else {
-				if (email && password && confirmPassword) {
-					try {
-						await createUserWithEmailAndPassword(auth, email, password).catch(
-							(err) => console.log(err)
-						);
-						await sendEmailVerification(auth.currentUser).catch((err) =>
-							console.log(err)
-						);
-						await updateProfile(auth.currentUser, {
-							displayName: fullName,
-						}).catch((err) => console.log(err));
-					} catch (err) {
-						console.log(err);
-					}
+		createUserWithEmailAndPassword(auth, email, password)
+			.then((userCredentials) => {
+				const user = userCredentials;
+				console.log('Registered with:', user.uid);
 
-					// Go to email confirmation screen instead of registration completion screen
-					navigation.replace('Steps');
-				} else {
-					alert('Please enter all requested data');
+				credentialsObj.userId = user.uid;
+				credentialsObj.email = user.email;
+				dispatch(setCredentials(credentialsObj));
+			})
+			.catch((error) => {
+				console.log(error);
+				switch (error.code) {
+					case 'auth/invalid-email':
+						alert('Email already in use !');
+						break;
 				}
-			}
-		} else {
-			alert('Please enter email in right format');
-		}
+			});
+
+		// // Check if email is in right format
+		// if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+		// 	// If password is not same enter same password
+		// 	if (password != confirmPassword) {
+		// 		alert(
+		// 			'Please make sure that password and confirm password are matching.'
+		// 		);
+		// 	} else {
+		// 		if (email && password && confirmPassword) {
+		// 			// Go to email confirmation screen instead of registration completion screen
+		// 			navigation.replace('EmailConfirmationScreen');
+		// 		} else {
+		// 			alert('Please enter all requested data');
+		// 		}
+		// 	}
+		// } else {
+		// 	alert('Please enter email in right format');
+		// }
 	};
 
 	const navigation = useNavigation();
@@ -107,14 +127,7 @@ const SignUp = () => {
 				</View>
 
 				{/* Email input field */}
-				<Animated.View
-					style={[
-						styles.inputView,
-						{
-							transform: [{ translateX: shakeEmail }],
-						},
-					]}
-				>
+				<Animated.View style={[styles.inputView]}>
 					<MaterialIcons
 						name="alternate-email"
 						size={20}
@@ -131,14 +144,7 @@ const SignUp = () => {
 				</Animated.View>
 
 				{/* Password input field */}
-				<Animated.View
-					style={[
-						styles.inputView,
-						{
-							transform: [{ translateX: shakeEmail }],
-						},
-					]}
-				>
+				<Animated.View style={[styles.inputView]}>
 					<Feather
 						name="lock"
 						size={20}
@@ -155,14 +161,7 @@ const SignUp = () => {
 				</Animated.View>
 
 				{/* Confirm password input field */}
-				<Animated.View
-					style={[
-						styles.inputView,
-						{
-							transform: [{ translateX: shakeEmail }],
-						},
-					]}
-				>
+				<Animated.View style={[styles.inputView]}>
 					<Feather
 						name="lock"
 						size={20}

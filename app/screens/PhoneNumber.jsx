@@ -23,6 +23,10 @@ const PhoneNumber = () => {
 		navigation.replace('Name');
 	};
 
+	const skip = () => {
+		navigation.replace('Name');
+	};
+
 	const navigation = useNavigation();
 
 	return (
@@ -68,7 +72,10 @@ const PhoneNumber = () => {
 					></Button>
 				</View>
 
-				<TouchableOpacity style={{ alignSelf: 'center', marginTop: 20 }}>
+				<TouchableOpacity
+					style={{ alignSelf: 'center', marginTop: 20 }}
+					onPress={() => skip()}
+				>
 					<Text style={{ fontSize: 12 }}>Skip</Text>
 				</TouchableOpacity>
 			</View>

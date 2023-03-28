@@ -14,12 +14,16 @@ const InputField = ({
 	keyboardType,
 	fieldButtonLabel,
 	fieldButtonFunction,
+	value,
+	setValue,
 }) => {
 	return (
 		<View style={styles.inputView}>
 			{icon}
 			{inputType == 'password' ? (
 				<TextInput
+					value={value}
+					onChangeText={(text) => setValue(text)}
 					placeholder={label}
 					keyboardType={keyboardType}
 					style={styles.passwordInput}
@@ -27,6 +31,10 @@ const InputField = ({
 				></TextInput>
 			) : (
 				<TextInput
+					value={value}
+					onChangeText={(text) => {
+						setValue(text);
+					}}
 					placeholder={label}
 					keyboardType={keyboardType}
 					style={styles.regularInput}
