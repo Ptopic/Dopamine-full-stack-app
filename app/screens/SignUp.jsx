@@ -7,7 +7,7 @@ import {
 	TouchableOpacity,
 	TextInput,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
 
 // Firebase
@@ -35,7 +35,7 @@ import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
 const SignUp = () => {
-	const [email, setEmail] = useState('');
+	const [emailVal, setEmailVal] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const app = initializeApp(firebaseConfig);
@@ -46,66 +46,56 @@ const SignUp = () => {
 		email: '',
 	};
 
-	const credentials = useSelector(selectCredentials);
+	const { userId, email } = useSelector((state) => state.credentials);
 	const dispatch = useDispatch();
 
-	// const handleSignUp = () => {
-	// 	createUserWithEmailAndPassword(auth, email, password)
-	// 		.then((userCredentials) => {
-	// 			const user = userCredentials;
-	// 			console.log('Registered with:', user);
-	// 		})
-	// 		.catch((error) => {
-	// 			switch (error.code) {
-	// 				case 'auth/invalid-email':
-	// 					alert('Email already in use !');
-	// 					break;
-	// 			}
-	// 		});
-	// };
-
-	const handleSignUp = () => {
+	const handleSignUp = async () => {
 		// Check if all form data is entered then try to sign up and redirect
-		// console.log(email);
-		// console.log(password);
-		// console.log(confirmPassword);
 
-		createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				const user = userCredentials;
-				console.log('Registered with:', user.uid);
+		// Check if email is in right format
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailVal)) {
+			// If password is not same enter same password
+			if (password != confirmPassword) {
+				alert(
+					'Please make sure that password and confirm password are matching.'
+				);
+			} else {
+				if (email && password && confirmPassword) {
+					// Go to email confirmation screen instead of registration completion screen
+					const cred = await createUserWithEmailAndPassword(
+						auth,
+						emailVal,
+						password
+					)
+						.then((userCredentials) => {
+							const user = userCredentials.user;
+							console.log('Registered with:', user.uid);
 
-				credentialsObj.userId = user.uid;
-				credentialsObj.email = user.email;
-				dispatch(setCredentials(credentialsObj));
-			})
-			.catch((error) => {
-				console.log(error);
-				switch (error.code) {
-					case 'auth/invalid-email':
-						alert('Email already in use !');
-						break;
+							// credentialsObj.userId = user.uid;
+							// credentialsObj.email = user.email;
+
+							// console.log(credentialsObj);
+							dispatch(setCredentials({ id: user.uid, email: emailVal }));
+							navigation.navigate('EmailConfirmationScreen');
+						})
+						.catch((error) => {
+							console.log(error);
+							switch (error.code) {
+								case 'auth/invalid-email':
+									alert('Email already in use !');
+									break;
+							}
+						});
+					await sendEmailVerification(cred.user);
+				} else {
+					alert('Please enter all requested data');
 				}
-			});
+			}
+		} else {
+			alert('Please enter email in right format');
+		}
 
-		// // Check if email is in right format
-		// if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-		// 	// If password is not same enter same password
-		// 	if (password != confirmPassword) {
-		// 		alert(
-		// 			'Please make sure that password and confirm password are matching.'
-		// 		);
-		// 	} else {
-		// 		if (email && password && confirmPassword) {
-		// 			// Go to email confirmation screen instead of registration completion screen
-		// 			navigation.replace('EmailConfirmationScreen');
-		// 		} else {
-		// 			alert('Please enter all requested data');
-		// 		}
-		// 	}
-		// } else {
-		// 	alert('Please enter email in right format');
-		// }
+		// dispatch(setCredentials({ id: '1212', email: 'dadwadwa' }));
 	};
 
 	const navigation = useNavigation();
@@ -135,8 +125,8 @@ const SignUp = () => {
 						style={{ marginRight: 5 }}
 					/>
 					<TextInput
-						value={email}
-						onChangeText={(text) => setEmail(text)}
+						value={emailVal}
+						onChangeText={(text) => setEmailVal(text)}
 						placeholder={'E-mail'}
 						keyboardType={'email-address'}
 						style={{ flex: 1, paddingVertical: 0 }}
@@ -187,6 +177,10 @@ const SignUp = () => {
 						fontWeight="bold"
 						fontSize={16}
 					></Button>
+
+					<Text>{userId}</Text>
+
+					<Text>{email}</Text>
 				</View>
 			</View>
 

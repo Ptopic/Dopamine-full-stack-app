@@ -25,7 +25,15 @@ import emailImage from '@Assets/images/confirmation.jpg';
 // Components
 import Header from '@Components/Header';
 
+// Redux states
+
+import { useSelector, useDispatch } from 'react-redux';
+import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
+import { selectCredentials } from '@Redux/slices/credentialsReducer';
+
 const EmailConfirmationScreen = () => {
+	const credentials = useSelector(selectCredentials);
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header route={'SignUp'} color={'#0782F9'} />
@@ -62,7 +70,9 @@ const EmailConfirmationScreen = () => {
 				<Text style={{ textAlign: 'center', fontSize: 14 }}>
 					We sent a confirmation email to:
 				</Text>
-				<Text style={{ fontWeight: 'bold', paddingVertical: 20 }}>Email</Text>
+				<Text style={{ fontWeight: 'bold', paddingVertical: 20 }}>
+					{credentials.email}
+				</Text>
 
 				<Text style={{ textAlign: 'center', fontSize: 14 }}>
 					Check your email and click on the confirmation link to continue.

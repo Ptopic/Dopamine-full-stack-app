@@ -34,7 +34,7 @@ export default function App() {
 			<SafeAreaProvider>
 				<NavigationContainer theme={navTheme}>
 					{/* initialRouteName is set to Test for redux testing purposesinitialRouteName */}
-					<Stack.Navigator initialRouteName="DateOfBirth">
+					<Stack.Navigator initialRouteName="Login">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"

@@ -45,7 +45,8 @@ const LoginScreen = () => {
 	// If user is logedin switch to home page
 	useEffect(() => {
 		const unsub = auth.onAuthStateChanged((user) => {
-			if (user) {
+			console.log(user.emailVerified);
+			if (user.emailVerified) {
 				navigation.replace('Home');
 			}
 		});
