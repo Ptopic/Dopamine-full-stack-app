@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS users(
 	uid VARCHAR(255) NOT NULL,
+    isVerified BOOLEAN NOT NULL DEFAULT false,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
