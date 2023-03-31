@@ -1,3 +1,5 @@
+// mysql -h sql957.main-hosting.eu -u u533381764_users -D u533381764_users -p
+
 const mysql = require('mysql2');
 
 const db = mysql.createPool({
