@@ -3,6 +3,7 @@ const {
 	createUser,
 	signIn,
 	createAuthToken,
+	verifyUser,
 } = require('../controllers/user');
 const { validateUser, validateFunc } = require('../middlewares/validator');
 
@@ -18,5 +19,7 @@ router.post(
 );
 
 router.post('/signin', signIn);
+
+router.post('/verify', verifyUser);
 
 module.exports = router;

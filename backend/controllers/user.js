@@ -35,22 +35,22 @@ exports.createUser = async (req, res, next) => {
 
 	// Check if user with same name exists if it does return error
 
-	// db.query(sqlInsert, (err, result) => {
-	// 	if (err) {
-	// 		return res.status(400).json({
-	// 			success: false,
-	// 			error: 'Username or email need to be different',
-	// 		});
-	// 	}
-	// 	// res.send(result);
-	// 	res.locals.uid = uid;
-	// 	res.locals.email = email;
-	// 	next();
-	// });
+	db.query(sqlInsert, (err, result) => {
+		if (err) {
+			return res.status(400).json({
+				success: false,
+				error: 'Username or email need to be different',
+			});
+		}
+		// res.send(result);
+		res.locals.uid = uid;
+		res.locals.email = email;
+		next();
+	});
 
-	// For TESTING
-	res.locals.email = email;
-	next();
+	// // FIXME For TESTING
+	// res.locals.email = email;
+	// next();
 };
 
 exports.createAuthToken = async (req, res) => {
@@ -77,18 +77,19 @@ exports.createAuthToken = async (req, res) => {
 			console.log(err);
 		} else {
 			console.log(info);
+			res.send('Success');
 		}
 	});
-	// const sqlInsert = `INSERT INTO authTokens
-	// (uid, createdAt, ownerId, token)
-	// VALUES ('${uid}', '${date}', '${ownerId}', '${hashedOTP}')`;
+	const sqlInsert = `INSERT INTO authTokens
+	(uid, createdAt, ownerId, token)
+	VALUES ('${uid}', '${date}', '${ownerId}', '${hashedOTP}')`;
 
-	// db.query(sqlInsert, (err, result) => {
-	// 	if (err) {
-	// 		return res.status(400).json({ success: false, error: err.code });
-	// 	}
-	// 	return res.status(200).json({ success: true, error: 'Success' });
-	// });
+	db.query(sqlInsert, (err, result) => {
+		if (err) {
+			return res.status(400).json({ success: false, error: err.code });
+		}
+		return res.status(200).json({ success: true, error: 'Success' });
+	});
 
 	// Create cron job to delete auth record after 2 minutes
 };
@@ -143,5 +144,42 @@ exports.signIn = async (req, res) => {
 			id: user.uid,
 			token: token,
 		},
+	});
+};
+
+exports.verifyUser = async (req, res) => {
+	const { userId, otp } = req.body;
+
+	if (!userId || !otp.trim())
+		return res.status(400).json({
+			success: false,
+			error: 'Invalid request, missing otp or userId',
+		});
+
+	// Find user and
+	const findQuery = `SELECT * FROM users WHERE uid = "${userId}"; SELECT * FROM authTokens WHERE ownerId = "${userId}"`;
+
+	db.query(findQuery, (err, result) => {
+		if (err) {
+			return res.status(400).json({ success: false, error: err.code });
+		}
+
+		if (result[0].isVerified)
+			return res
+				.status(400)
+				.json({ success: false, error: 'This user is already verified' });
+
+		if (result[1].length < 1)
+			return res
+				.status(400)
+				.json({ success: false, error: 'Sorry, user not found' });
+
+		// Compare given otp to user otp
+
+		if (!result[1].token == otp)
+			return res
+				.status(400)
+				.json({ success: false, error: 'Please provide a valid token' });
+		return res.send(result);
 	});
 };
