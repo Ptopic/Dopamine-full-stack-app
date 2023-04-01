@@ -145,6 +145,96 @@ exports.signIn = async (req, res) => {
 	});
 };
 
+exports.resendEmailAuthentication = async (req, res) => {
+	const { email } = req.body;
+
+	console.log(email);
+	const uid = uuidv4();
+
+	// Find owner with coresponding email
+	const findUserId = `SELECT * FROM users WHERE email = "${email}"`;
+	let userEmail, userId;
+
+	db.query(findUserId, (err, result) => {
+		if (err || result.length < 1) {
+			return res.status(400).send({
+				success: false,
+				error: 'User with that email was not found :(',
+			});
+		}
+
+		if (result[0].isVerified) {
+			return res.status(400).send({
+				success: false,
+				error: 'User is already verified',
+			});
+		}
+
+		userEmail = result[0].email;
+		userId = result[0].uid;
+
+		console.log(userEmail);
+
+		// If user already has active token terminate
+
+		const getIsAuthActive = `SELECT * FROM authTokens WHERE ownerId = "${userId}"`;
+
+		db.query(getIsAuthActive, async (err, result) => {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					error: 'Error :(',
+				});
+			}
+
+			if (result.length < 1) {
+				const ownerId = userId;
+				const dateNow = new Date();
+				const stringDate = dateNow.toISOString();
+				const isoDate = new Date(stringDate);
+				const date = isoDate.toJSON().slice(0, 19).replace('T', ' ');
+				console.log(date);
+				const OTP = generateOtp(res);
+				const hashedOTP = await bcrypt.hash(OTP, 8);
+				// Send auth email
+				const mailOptions = {
+					from: 'email@email.com',
+					to: userEmail,
+					subject: 'Verify your email',
+					html: generateEmailTemplate(OTP),
+				};
+				mailTransport().sendMail(mailOptions, function (err, info) {
+					if (err) {
+						return res
+							.status(400)
+							.send({ success: false, error: 'Cant send email' });
+					}
+				});
+				const sqlInsert = `INSERT INTO authTokens
+			(uid, createdAt, ownerId, token)
+			VALUES ('${uid}', '${date}', '${userId}', '${hashedOTP}')`;
+				db.query(sqlInsert, (err, result) => {
+					if (err) {
+						return res.status(400).send({ success: false, error: err.code });
+					}
+				});
+
+				return res.status(400).send({
+					success: false,
+					error: 'Verification email sent check email.',
+				});
+
+				// Create cron job to delete auth record after 2 minutes
+			} else {
+				return res.status(400).send({
+					success: false,
+					error: 'User already has auth token, check your email',
+				});
+			}
+		});
+	});
+};
+
 exports.verifyUser = async (req, res) => {
 	const { userId, otp } = req.body;
 

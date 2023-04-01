@@ -4,6 +4,7 @@ const {
 	signIn,
 	createAuthToken,
 	verifyUser,
+	resendEmailAuthentication,
 } = require('../controllers/user');
 const { validateUser, validateFunc } = require('../middlewares/validator');
 
@@ -21,5 +22,7 @@ router.post(
 router.post('/signin', signIn);
 
 router.post('/verify', verifyUser);
+
+router.post('/resend-email', resendEmailAuthentication);
 
 module.exports = router;
