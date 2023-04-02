@@ -5,6 +5,7 @@ const {
 	createAuthToken,
 	verifyUser,
 	resendEmailAuthentication,
+	resetPassword,
 } = require('../controllers/user');
 const { validateUser, validateFunc } = require('../middlewares/validator');
 
@@ -16,7 +17,8 @@ router.post(
 	validateFunc,
 	checkUserName,
 	createUser,
-	createAuthToken
+	createAuthToken,
+	resetPassword
 );
 
 router.post('/signin', signIn);
@@ -24,5 +26,7 @@ router.post('/signin', signIn);
 router.post('/verify', verifyUser);
 
 router.post('/resend-email', resendEmailAuthentication);
+
+router.post('/forgot-password', resetPassword);
 
 module.exports = router;

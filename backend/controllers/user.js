@@ -334,3 +334,41 @@ exports.verifyUser = async (req, res) => {
 		});
 	});
 };
+
+exports.resetPassword = async (req, res) => {
+	const { email } = req.body;
+
+	// Check if email is provided
+
+	// Find owner with coresponding email
+	const findUserByEmail = `SELECT * FROM users WHERE email = "${email}"`;
+	let userEmail, userId;
+
+	db.query(findUserByEmail, (err, result) => {
+		if (err || result.length < 1) {
+			return res.status(400).send({
+				success: false,
+				error: 'User with that email was not found :(',
+			});
+		}
+
+		userEmail = result[0].email;
+		userId = result[0].uid;
+	});
+
+	// Try to find reset token
+
+
+
+
+
+	// Create new resset token if it doesnt exist
+
+
+
+
+	// Send password reset email
+
+
+};		
+
