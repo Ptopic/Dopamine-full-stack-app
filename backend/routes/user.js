@@ -5,9 +5,11 @@ const {
 	createAuthToken,
 	verifyUser,
 	resendEmailAuthentication,
+	forgotPassword,
 	resetPassword,
 } = require('../controllers/user');
 const { validateUser, validateFunc } = require('../middlewares/validator');
+const { isResetTokenValid } = require('../middlewares/user');
 
 const router = require('express').Router();
 
@@ -17,8 +19,7 @@ router.post(
 	validateFunc,
 	checkUserName,
 	createUser,
-	createAuthToken,
-	resetPassword
+	createAuthToken
 );
 
 router.post('/signin', signIn);
@@ -27,6 +28,8 @@ router.post('/verify', verifyUser);
 
 router.post('/resend-email', resendEmailAuthentication);
 
-router.post('/forgot-password', resetPassword);
+router.post('/forgot-password', forgotPassword);
+
+router.post('/reset-password', isResetTokenValid, resetPassword);
 
 module.exports = router;

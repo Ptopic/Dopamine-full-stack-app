@@ -1,11 +1,12 @@
 const db = require('../db/index');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
-const sendError = require('../utils/helper');
+const { sendError, createRandomBytes } = require('../utils/helper');
 const {
 	generateOtp,
 	mailTransport,
 	generateEmailTemplate,
+	generatePasswordResetTemplate,
 } = require('../utils/mail');
 const jwt = require('jsonwebtoken');
 
@@ -335,16 +336,22 @@ exports.verifyUser = async (req, res) => {
 	});
 };
 
-exports.resetPassword = async (req, res) => {
+exports.forgotPassword = async (req, res) => {
 	const { email } = req.body;
 
 	// Check if email is provided
+	if (!email) {
+		return res.status(400).send({
+			success: false,
+			error: 'Please provide a email address',
+		});
+	}
 
 	// Find owner with coresponding email
 	const findUserByEmail = `SELECT * FROM users WHERE email = "${email}"`;
 	let userEmail, userId;
 
-	db.query(findUserByEmail, (err, result) => {
+	db.query(findUserByEmail, async (err, result) => {
 		if (err || result.length < 1) {
 			return res.status(400).send({
 				success: false,
@@ -354,21 +361,56 @@ exports.resetPassword = async (req, res) => {
 
 		userEmail = result[0].email;
 		userId = result[0].uid;
+
+		// Create new resset token
+
+		const uid = uuidv4();
+		const dateNow = new Date();
+		const stringDate = dateNow.toISOString();
+		const isoDate = new Date(stringDate);
+		const date = isoDate.toJSON().slice(0, 19).replace('T', ' ');
+
+		const token = await createRandomBytes();
+		const insertToken = `INSERT INTO resetTokens (uid,createdAt,ownerId,token) VALUES ('${uid}', '${date}', '${userId}', '${token}')`;
+
+		db.query(insertToken, (err, result) => {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					error: 'Error creating reset password token',
+				});
+			}
+		});
+
+		// Send password reset email
+
+		const mailOptions = {
+			from: 'email@email.com',
+			to: userEmail,
+			subject: 'Email verified',
+			html: generatePasswordResetTemplate(
+				`http://localhost:3000/reset-password?token=${token}&id=${userId}`
+			),
+		};
+		mailTransport().sendMail(mailOptions, function (err, info) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(info);
+				res.send('Success');
+			}
+		});
 	});
-
-	// Try to find reset token
-
+};
 
 
+exports.resetPassword = async (req,res) => {
+	const {email} = req.body;
+
+	// Get userId from url params and search in db for that user
+
+	
 
 
-	// Create new resset token if it doesnt exist
 
-
-
-
-	// Send password reset email
-
-
-};		
-
+}
