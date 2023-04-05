@@ -7,7 +7,7 @@ exports.isResetTokenValid = async (req, res, next) => {
 	if (!token || !id) return sendError(res, 'invalid request');
 
 	// Find user by id if not found return error
-	const findUser = `SELECT * FROM resetTokens WHERE ownerId = "${id}"`;
+	const findUser = `SELECT * FROM users WHERE uid = "${id}"`;
 
 	db.query(findUser, (err, result) => {
 		if (err) {
@@ -21,9 +21,9 @@ exports.isResetTokenValid = async (req, res, next) => {
 		}
 
 		// Find resetToken by token if not found return error
-		const findUser = `SELECT * FROM resetTokens WHERE token = "${token}"`;
+		const findAuthToken = `SELECT * FROM resetTokens WHERE token = "${token}"`;
 
-		db.query(findUser, (err, result) => {
+		db.query(findAuthToken, (err, result) => {
 			if (err) {
 				return sendError(res, 'DB Error');
 			}

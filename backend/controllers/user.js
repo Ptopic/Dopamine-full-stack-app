@@ -126,6 +126,9 @@ exports.signIn = async (req, res) => {
 	if (!user)
 		return res.status(400).send({ success: false, error: 'User not found!' });
 
+	// If user is not verified return error
+	if (!user.isVerified) return sendError(res, 'User is not verified');
+
 	const isMatch = await signInUser(req.body.password, user.password);
 	if (!isMatch)
 		return res
@@ -387,7 +390,7 @@ exports.forgotPassword = async (req, res) => {
 		const mailOptions = {
 			from: 'email@email.com',
 			to: userEmail,
-			subject: 'Email verified',
+			subject: 'Forgot password',
 			html: generatePasswordResetTemplate(
 				`http://localhost:3000/reset-password?token=${token}&id=${userId}`
 			),
@@ -403,14 +406,64 @@ exports.forgotPassword = async (req, res) => {
 	});
 };
 
-
-exports.resetPassword = async (req,res) => {
-	const {email} = req.body;
+exports.resetPassword = async (req, res) => {
+	const { password } = req.body;
 
 	// Get userId from url params and search in db for that user
+	const userId = req.user.uid;
 
-	
+	const selectUserById = `SELECT * FROM users WHERE uid = "${userId}"`;
 
+	db.query(selectUserById, async (err, result) => {
+		if (err) {
+			return sendError(res, 'User not found');
+		}
 
+		if (!result) return sendError(res, 'User not found');
 
-}
+		const currentUser = result[0];
+		console.log(req.body.password);
+		console.log(result[0].password);
+		const isSamePassword = await bcrypt.compareSync(
+			req.body.password,
+			currentUser.password
+		);
+
+		if (isSamePassword)
+			return sendError(res, 'New password must be different from new password');
+
+		if (password.trim().length < 8 || password.trim().length > 20)
+			return sendError(res, 'Password must be between 8 and 20 characters');
+
+		// Set user new password and hash it
+		const hashedPassword = await bcrypt.hash(password, 8);
+		console.log(hashedPassword);
+		const setUserPassword = `UPDATE users SET password = "${hashedPassword}" WHERE uid = "${userId}"`;
+		db.query(setUserPassword, (err, result) => {
+			if (err) return sendError(res, 'Error while setting user password');
+
+			// Delete user token with ownerId as userId
+			const removeResetToken = `DELETE FROM resetTokens WHERE ownerId = "${userId}"`;
+
+			db.query(removeResetToken, (err, result) => {
+				if (err) return sendError(res, 'Error while deleting reset token');
+
+				// Send verified password email
+
+				const mailOptions = {
+					from: 'email@email.com',
+					to: currentUser.email,
+					subject: 'Password changed',
+					html: `<h1>Password changed successfully</h1>`,
+				};
+				mailTransport().sendMail(mailOptions, function (err, info) {
+					if (err) {
+						return sendError('Error while sending email');
+					}
+				});
+
+				res.json({ success: true, message: 'Password reset successfully' });
+			});
+		});
+	});
+};
