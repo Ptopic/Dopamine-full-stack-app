@@ -1,5 +1,6 @@
 ## Todo list
 
+- [ ] make custom email templats for otp email, email verified, forgot password link, and password reset email
 - [ ] !!! add all userInfo stuff to global userInfo state in redux
 - [x] add username picking form before phone number form
 - [ ] add redux states for all forms so that input field can be universal component rather than copy paste
