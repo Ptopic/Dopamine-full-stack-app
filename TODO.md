@@ -1,5 +1,7 @@
 ## Todo list
 
+- [ ] edit reset password page add custom logo and style input fields, make better loading spinner
+- [ ] add cron jobs to backend to remove reset tokens after one hour
 - [ ] make custom email templats for otp email, email verified, forgot password link, and password reset email
 - [ ] !!! add all userInfo stuff to global userInfo state in redux
 - [x] add username picking form before phone number form
