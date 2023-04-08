@@ -1,6 +1,7 @@
 const db = require('../db/index');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
+const schedule = require('node-schedule');
 const { sendError, createRandomBytes } = require('../utils/helper');
 const {
 	generateOtp,
@@ -9,6 +10,34 @@ const {
 	generatePasswordResetTemplate,
 } = require('../utils/mail');
 const jwt = require('jsonwebtoken');
+
+const deleteTokenJob = (tokenTableName, id, time) => {
+	let dateForJob = new Date();
+	let hours = dateForJob.getHours();
+	let minutes = dateForJob.getMinutes() + time;
+
+	// If minutes + 10 is more than 60 increase hour by one and minute by 60 - that time
+
+	if (minutes > 60) {
+		let minutesDif = Math.abs(60 - minutes);
+		hours = hours + 1;
+
+		minutes = minutesDif;
+	}
+	let rule = new schedule.RecurrenceRule();
+	rule.hour = hours;
+	rule.minute = minutes;
+	rule.seconds = 00;
+	const job = schedule.scheduleJob(rule, function () {
+		// Delete auth token
+
+		const removeResetToken = `DELETE FROM ${tokenTableName} WHERE ownerId = "${id}"`;
+
+		db.query(removeResetToken, (err, result) => {
+			if (err) return sendError(res, 'Error while deleting reset token');
+		});
+	});
+};
 
 exports.checkUserName = async (req, res, next) => {
 	const { name, email, password } = req.body;
@@ -43,7 +72,6 @@ exports.createUser = async (req, res, next) => {
 				error: 'Username or email need to be different',
 			});
 		}
-		// res.send(result);
 		res.locals.uid = uid;
 		res.locals.email = email;
 		next();
@@ -90,7 +118,9 @@ exports.createAuthToken = async (req, res) => {
 		return res.status(200).send({ success: true, error: 'Success' });
 	});
 
-	// Create cron job to delete auth record after 2 minutes
+	// Delete token after 10 minutes
+
+	deleteTokenJob('authTokens', ownerId, 5);
 };
 
 const signInUser = async (password, userPassword) => {
@@ -223,12 +253,14 @@ exports.resendEmailAuthentication = async (req, res) => {
 					}
 				});
 
+				// Create cron job to delete auth record after 10 minutes
+
+				deleteTokenJob('authTokens', ownerId, 10);
+
 				return res.status(400).send({
 					success: false,
 					error: 'Verification email sent check email.',
 				});
-
-				// Create cron job to delete auth record after 2 minutes
 			} else {
 				return res.status(400).send({
 					success: false,
@@ -263,8 +295,6 @@ exports.verifyUser = async (req, res) => {
 		}
 
 		res.locals.user = result[0];
-		// console.log(result[0]);
-
 		db.query(findQueryTokens, async (err, result) => {
 			if (err) {
 				return res.status(400).send({ success: false, error: err.code });
@@ -276,10 +306,7 @@ exports.verifyUser = async (req, res) => {
 					.send({ success: false, error: 'user or token not found' });
 			}
 			res.locals.token = result[0];
-			// console.log(result[0]);
 
-			// // console.log(result[0][0].email);
-			// res.locals.email = result[0][0].email;
 			if (res.locals.user.isVerified)
 				return res
 					.status(400)
@@ -384,6 +411,9 @@ exports.forgotPassword = async (req, res) => {
 				});
 			}
 		});
+
+		// Delete token after 10 minutes
+		deleteTokenJob('resetTokens', userId, 5);
 
 		// Send password reset email
 
