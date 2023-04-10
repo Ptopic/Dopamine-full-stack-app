@@ -33,64 +33,64 @@ const LoginScreen = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const credentialsObj = {
-		userId: '',
-		email: '',
-	};
-	const credentials = useSelector(selectCredentials);
-	const dispatch = useDispatch();
+	// const credentialsObj = {
+	// 	userId: '',
+	// 	email: '',
+	// };
+	// const credentials = useSelector(selectCredentials);
+	// const dispatch = useDispatch();
 
 	const navigation = useNavigation();
 
-	// If user is logedin switch to home page
-	useEffect(() => {
-		const unsub = auth.onAuthStateChanged((user) => {
-			console.log(user.emailVerified);
-			if (user.emailVerified) {
-				navigation.replace('Home');
-			}
-		});
-		return unsub;
-	}, []);
+	// // If user is logedin switch to home page
+	// useEffect(() => {
+	// 	const unsub = auth.onAuthStateChanged((user) => {
+	// 		console.log(user.emailVerified);
+	// 		if (user.emailVerified) {
+	// 			navigation.replace('Home');
+	// 		}
+	// 	});
+	// 	return unsub;
+	// }, []);
 
-	const app = initializeApp(firebaseConfig);
-	const auth = getAuth(app);
+	// const app = initializeApp(firebaseConfig);
+	// const auth = getAuth(app);
 
-	const handleLogIn = () => {
-		signInWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				const user = userCredentials.user;
+	// const handleLogIn = () => {
+	// 	signInWithEmailAndPassword(auth, email, password)
+	// 		.then((userCredentials) => {
+	// 			const user = userCredentials.user;
 
-				credentialsObj.userId = user.uid;
-				credentialsObj.email = user.email;
-				dispatch(setCredentials(credentialsObj));
+	// 			credentialsObj.userId = user.uid;
+	// 			credentialsObj.email = user.email;
+	// 			dispatch(setCredentials(credentialsObj));
 
-				// Delete user email and password from state keep only user id
-			})
-			.catch((error) => {
-				console.log(error.code);
-				switch (error.code) {
-					case 'auth/invalid-email':
-						alert('Invalid email!');
-						break;
-					case 'auth/internal-error':
-						// Add shake effect for form and color it red for 1 second
-						alert('Please enter a password!');
-						break;
-					case 'auth/too-many-requests':
-						alert('Too many requests, slow down');
-						break;
-					case 'auth/wrong-password':
-						// Add shake effect for form and color it red for 1 second
-						alert('Wrong password');
-						break;
-					case 'auth/user-not-found':
-						// Add shake effect for form and color it red for 1 second
-						alert('Invalid email or password');
-						break;
-				}
-			});
-	};
+	// 			// Delete user email and password from state keep only user id
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error.code);
+	// 			switch (error.code) {
+	// 				case 'auth/invalid-email':
+	// 					alert('Invalid email!');
+	// 					break;
+	// 				case 'auth/internal-error':
+	// 					// Add shake effect for form and color it red for 1 second
+	// 					alert('Please enter a password!');
+	// 					break;
+	// 				case 'auth/too-many-requests':
+	// 					alert('Too many requests, slow down');
+	// 					break;
+	// 				case 'auth/wrong-password':
+	// 					// Add shake effect for form and color it red for 1 second
+	// 					alert('Wrong password');
+	// 					break;
+	// 				case 'auth/user-not-found':
+	// 					// Add shake effect for form and color it red for 1 second
+	// 					alert('Invalid email or password');
+	// 					break;
+	// 			}
+	// 		});
+	// };
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -156,7 +156,6 @@ const LoginScreen = () => {
 						colorBg="#0782F9"
 						colorText="white"
 						align="center"
-						submitAction={handleLogIn}
 						fontWeight="bold"
 						fontSize={16}
 					></Button>

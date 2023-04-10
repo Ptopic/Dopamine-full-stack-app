@@ -6,44 +6,60 @@ import {
 	TouchableOpacity,
 } from 'react-native';
 import React from 'react';
+import { useFormikContext } from 'formik';
 
 const InputField = ({
-	label,
+	name,
+	placeholder,
 	icon,
 	inputType,
 	keyboardType,
 	fieldButtonLabel,
 	fieldButtonFunction,
-	value,
-	setValue,
+	...rest
 }) => {
+	const { errors, values, touched, handleBlur, handleChange } =
+		useFormikContext();
+
+	const value = values[name];
+	const error = errors[name];
+	const isInputTouched = touched[name];
+
 	return (
-		<View style={styles.inputView}>
-			{icon}
-			{inputType == 'password' ? (
-				<TextInput
-					value={value}
-					onChangeText={(text) => setValue(text)}
-					placeholder={label}
-					keyboardType={keyboardType}
-					style={styles.passwordInput}
-					secureTextEntry={true}
-				></TextInput>
-			) : (
-				<TextInput
-					value={value}
-					onChangeText={(text) => {
-						setValue(text);
-					}}
-					placeholder={label}
-					keyboardType={keyboardType}
-					style={styles.regularInput}
-				/>
-			)}
-			<TouchableOpacity onPress={fieldButtonFunction}>
-				<Text style={styles.fieldButtonStyle}>{fieldButtonLabel}</Text>
-			</TouchableOpacity>
-		</View>
+		<>
+			{error && isInputTouched ? (
+				<View>
+					<Text>{error}</Text>
+				</View>
+			) : null}
+			<View style={styles.inputView}>
+				{icon}
+				{inputType == 'password' ? (
+					<TextInput
+						value={value}
+						onChangeText={handleChange(name)}
+						onBlur={handleBlur(name)}
+						placeholder={placeholder}
+						keyboardType={keyboardType}
+						style={styles.passwordInput}
+						secureTextEntry={true}
+						{...rest}
+					></TextInput>
+				) : (
+					<TextInput
+						value={value}
+						onChangeText={handleChange(name)}
+						onBlur={handleBlur(name)}
+						placeholder={placeholder}
+						keyboardType={keyboardType}
+						style={styles.regularInput}
+					/>
+				)}
+				<TouchableOpacity onPress={fieldButtonFunction}>
+					<Text style={styles.fieldButtonStyle}>{fieldButtonLabel}</Text>
+				</TouchableOpacity>
+			</View>
+		</>
 	);
 };
 
