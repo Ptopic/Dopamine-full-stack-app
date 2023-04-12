@@ -7,7 +7,7 @@
 <h3>Build with:</h3>
 
 » Backend -> nodejs, mysql <br>
-» Ios app -> react native, formik <br>
+» Ios app -> react native <br>
 » Frontend -> react
 
 <h2>Screenshot of Project 📸</h2>
