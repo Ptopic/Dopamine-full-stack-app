@@ -1,13 +1,11 @@
-// mysql -h sql957.main-hosting.eu -u u533381764_users -D u533381764_users -p
-
 const mysql = require('mysql2');
 
 const db = mysql.createPool({
-	host: 'sql957.main-hosting.eu',
-	user: 'u533381764_users',
-	password: 'N8Vx3nLW$',
-	database: 'u533381764_users',
-	multipleStatements: true
+	host: process.env.MYSQL_HOST,
+	user: process.env.MYSQL_USER,
+	password: process.env.MYSQL_PASSWORD,
+	database: process.env.MYSQL_DATABASE,
+	multipleStatements: true,
 });
 
 module.exports = db;
