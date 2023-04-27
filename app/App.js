@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -19,22 +19,31 @@ import DateOfBirth from '@Screens/DateOfBirth';
 import Country from '@Screens/Country';
 import Gender from '@Screens/Gender';
 import Test from '@Screens/Test';
-import RegistrationDone from '@Screens/RegistrationDone';
+import AnalyzingData from '@Screens/AnalyzingData';
 import { Provider } from 'react-redux';
 import store from '@Redux/store';
 
 const Stack = createNativeStackNavigator();
 
-const navTheme = DefaultTheme;
-navTheme.colors.background = '#fff';
+const MyTheme = {
+	...DefaultTheme,
+	colors: {
+		background: '#141416',
+		text: 'white',
+	},
+};
+// const navTheme = DefaultTheme;
+// navTheme.colors.background = '#141416';
+// navTheme.colors.text = '#ffffff';
 
 export default function App() {
 	return (
 		<Provider store={store}>
 			<SafeAreaProvider>
-				<NavigationContainer theme={navTheme}>
+				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
+				<NavigationContainer theme={MyTheme}>
 					{/* initialRouteName is set to Test for redux testing purposesinitialRouteName */}
-					<Stack.Navigator initialRouteName="Login">
+					<Stack.Navigator initialRouteName="Forgot">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"
@@ -108,8 +117,8 @@ export default function App() {
 						/>
 						<Stack.Screen
 							options={{ headerShown: false }}
-							name="RegistrationDone"
-							component={RegistrationDone}
+							name="AnalyzingData"
+							component={AnalyzingData}
 						/>
 						<Stack.Screen
 							options={{ headerShown: false }}

@@ -27,7 +27,7 @@ const Gender = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Country'} color={'#0782F9'} title={'Step 6 of 6'} />
+			<Header route={'Country'} color={'#1769fd'} title={'Step 6 of 6'} />
 			<View style={{ paddingHorizontal: 25, flex: 1 }}>
 				<View
 					style={{
@@ -41,6 +41,7 @@ const Gender = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
+							color: 'white',
 						}}
 					>
 						Whats your gender?
@@ -50,7 +51,7 @@ const Gender = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#0782F9"
+						colorBg="#1769fd"
 						colorText="white"
 						align="center"
 						submitAction={next}

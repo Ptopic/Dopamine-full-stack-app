@@ -14,9 +14,10 @@ import { StatusBar } from 'react-native';
 import { Motion } from '@legendapp/motion';
 
 // Assets
-import Logo from '@Assets/images/Logo.png';
+import Logo from '@Assets/images/Logo3.png';
 
 // Components
+import RegularButton from '@Components/RegularButton';
 import Button from '@Components/Button';
 import InputField from '@Components/InputField';
 
@@ -43,20 +44,19 @@ const StarterScreen = () => {
 				{/* {loading ? <Text>Loading...</Text> : <Text>Not loading</Text>} */}
 				<View style={styles.imageContainer}>
 					<Image source={Logo} style={styles.image}></Image>
-					<Text>Dopamine</Text>
 				</View>
 
 				<View style={{ height: '10%' }}>
-					<Button
+					<RegularButton
 						label="Begin your journey"
-						colorBg="#0782F9"
+						colorBg="#1769fd"
 						colorText="white"
 						align="space-between"
 						icon={<MaterialIcons name="arrow-forward" size={32} color="#fff" />}
 						fontWeight="bold"
 						fontSize={16}
 						submitAction={beginJourney}
-					></Button>
+					></RegularButton>
 				</View>
 			</View>
 		</SafeAreaView>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	image: {
-		width: '80%',
+		width: '100%',
 		resizeMode: 'contain',
 	},
 });

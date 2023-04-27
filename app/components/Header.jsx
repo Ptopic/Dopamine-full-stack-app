@@ -22,7 +22,7 @@ const Header = ({ route, color, title, backgroundColor }) => {
 				<MaterialIcons name="arrow-back" size={36} color={color} />
 			</TouchableOpacity>
 			<View style={{ flexGrow: 1, marginRight: 50 }}>
-				<Text style={{ textAlign: 'center' }}>{title}</Text>
+				<Text style={{ textAlign: 'center', color: 'white' }}>{title}</Text>
 			</View>
 		</View>
 	);

@@ -28,7 +28,7 @@ const Steps = () => {
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			{/* <Header route={'SignUp'} color={'#0782F9'} /> */}
-			<View style={{ paddingHorizontal: 25, flex: 1, paddingTop: 20 }}>
+			<View style={{ paddingHorizontal: 20, flex: 1, paddingTop: 20 }}>
 				<View
 					style={{
 						alignItems: 'flex-start',
@@ -36,21 +36,22 @@ const Steps = () => {
 						paddingBottom: 120,
 					}}
 				>
-					<Animated.Text
+					<Text
 						style={{
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
+							color: 'white',
 						}}
 					>
 						We want to get to know you better 😊
-					</Animated.Text>
+					</Text>
 				</View>
 
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#0782F9"
+						colorBg="#1769fd"
 						colorText="white"
 						align="center"
 						submitAction={next}

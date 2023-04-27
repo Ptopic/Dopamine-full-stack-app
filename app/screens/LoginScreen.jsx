@@ -7,13 +7,12 @@ import {
 	TouchableOpacity,
 	SafeAreaView,
 	Animated,
+	KeyboardAvoidingView,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 
-// Firebase
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { firebaseConfig } from '../firebase';
-import { initializeApp } from '@firebase/app';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
@@ -30,9 +29,6 @@ import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
 const LoginScreen = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-
 	// const credentialsObj = {
 	// 	userId: '',
 	// 	email: '',
@@ -42,125 +38,129 @@ const LoginScreen = () => {
 
 	const navigation = useNavigation();
 
-	// // If user is logedin switch to home page
-	// useEffect(() => {
-	// 	const unsub = auth.onAuthStateChanged((user) => {
-	// 		console.log(user.emailVerified);
-	// 		if (user.emailVerified) {
-	// 			navigation.replace('Home');
-	// 		}
-	// 	});
-	// 	return unsub;
-	// }, []);
+	const initialValues = {
+		email: '',
+		password: '',
+	};
 
-	// const app = initializeApp(firebaseConfig);
-	// const auth = getAuth(app);
+	const validationSchema = yup.object({
+		email: yup.string().email('Invalid email').required('Email is missing'),
+		password: yup
+			.string()
+			.trim()
+			.min(8, 'Password is too short')
+			.required('Password is missing'),
+	});
 
-	// const handleLogIn = () => {
-	// 	signInWithEmailAndPassword(auth, email, password)
-	// 		.then((userCredentials) => {
-	// 			const user = userCredentials.user;
+	const handleLogIn = (values, formikActions) => {
+		setTimeout(() => {
+			console.log(values, formikActions);
+			navigation.navigate('Home');
+			formikActions.resetForm();
+			formikActions.setSubmitting(false);
+		}, 1000);
+	};
 
-	// 			credentialsObj.userId = user.uid;
-	// 			credentialsObj.email = user.email;
-	// 			dispatch(setCredentials(credentialsObj));
+	// const user = userCredentials.user;
 
-	// 			// Delete user email and password from state keep only user id
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error.code);
-	// 			switch (error.code) {
-	// 				case 'auth/invalid-email':
-	// 					alert('Invalid email!');
-	// 					break;
-	// 				case 'auth/internal-error':
-	// 					// Add shake effect for form and color it red for 1 second
-	// 					alert('Please enter a password!');
-	// 					break;
-	// 				case 'auth/too-many-requests':
-	// 					alert('Too many requests, slow down');
-	// 					break;
-	// 				case 'auth/wrong-password':
-	// 					// Add shake effect for form and color it red for 1 second
-	// 					alert('Wrong password');
-	// 					break;
-	// 				case 'auth/user-not-found':
-	// 					// Add shake effect for form and color it red for 1 second
-	// 					alert('Invalid email or password');
-	// 					break;
-	// 			}
-	// 		});
-	// };
+	// credentialsObj.userId = user.uid;
+	// credentialsObj.email = user.email;
+	// dispatch(setCredentials(credentialsObj));
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Starter'} color={'#0782F9'} />
-			<View style={styles.container}>
+			<Header route={'Starter'} color={'#1769fd'} />
+			<KeyboardAvoidingView behavior="padding" style={styles.container}>
 				<View style={styles.headerContainer}>
 					<Text
 						style={{
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 10,
+							color: '#fff',
 						}}
 					>
 						Welcome back
 					</Text>
 
-					<Text>Please enter your details.</Text>
-				</View>
-				<View style={[styles.inputView]}>
-					<MaterialIcons
-						name="alternate-email"
-						size={20}
-						color="#666"
-						style={{ marginRight: 5 }}
-					/>
-					<TextInput
-						value={email}
-						onChangeText={(text) => setEmail(text)}
-						placeholder={'E-mail'}
-						keyboardType={'email-address'}
-						style={{ flex: 1, paddingVertical: 0 }}
-					/>
-				</View>
-
-				<Animated.View style={[styles.inputView]}>
-					<Feather
-						name="lock"
-						size={20}
-						color="#666"
-						style={{ marginRight: 5 }}
-					/>
-					<TextInput
-						value={password}
-						onChangeText={(text) => setPassword(text)}
-						placeholder={'Password'}
-						style={{ flex: 1, paddingVertical: 0 }}
-						secureTextEntry={true}
-					/>
-				</Animated.View>
-
-				<TouchableOpacity
-					style={{ alignSelf: 'flex-start' }}
-					onPress={() => navigation.replace('Forgot')}
-				>
-					<Text style={{ fontSize: 12, color: '#666', textAlign: 'left' }}>
-						Forgot password?
+					<Text
+						style={{
+							marginBottom: 10,
+							color: '#fff',
+						}}
+					>
+						Please enter your details.
 					</Text>
-				</TouchableOpacity>
-
-				<View style={styles.buttonContainer}>
-					<Button
-						label="Login"
-						colorBg="#0782F9"
-						colorText="white"
-						align="center"
-						fontWeight="bold"
-						fontSize={16}
-					></Button>
 				</View>
-			</View>
+				<Formik
+					initialValues={initialValues}
+					validationSchema={validationSchema}
+					onSubmit={handleLogIn}
+				>
+					{() => {
+						return (
+							<>
+								{/* Email input field */}
+								<InputField
+									icon={
+										<MaterialIcons
+											name="alternate-email"
+											size={20}
+											color="#a9aec6"
+											style={{ marginRight: 5 }}
+										/>
+									}
+									name={'email'}
+									placeholder={'E-mail'}
+									keyboardType={'email-address'}
+								></InputField>
+
+								{/* Password input field */}
+								<InputField
+									icon={
+										<Feather
+											name="lock"
+											size={20}
+											color="#a9aec6"
+											style={{ marginRight: 5 }}
+										/>
+									}
+									name={'password'}
+									placeholder={'Password'}
+									inputType={'password'}
+								></InputField>
+
+								<TouchableOpacity
+									style={{ alignSelf: 'flex-start' }}
+									onPress={() => navigation.replace('Forgot')}
+								>
+									<Text
+										style={{
+											fontSize: 12,
+											color: '#1769fd',
+											textAlign: 'left',
+											fontWeight: 'bold',
+										}}
+									>
+										Forgot password?
+									</Text>
+								</TouchableOpacity>
+
+								<View style={styles.buttonContainer}>
+									<Button
+										label="Login"
+										colorBg="#1769fd"
+										colorText="white"
+										align="center"
+										fontWeight="bold"
+										fontSize={16}
+									></Button>
+								</View>
+							</>
+						);
+					}}
+				</Formik>
+			</KeyboardAvoidingView>
 			<View
 				style={{
 					flexDirection: 'row',
@@ -184,7 +184,7 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-	container: { paddingHorizontal: 25, flex: 1 },
+	container: { paddingHorizontal: 20, flex: 1 },
 	headerContainer: {
 		alignItems: 'flex-start',
 		paddingTop: 20,

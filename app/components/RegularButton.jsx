@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { useFormikContext } from 'formik';
 
-const Button = ({
+const RegularButton = ({
 	label,
 	colorBg,
 	colorText,
@@ -13,19 +12,18 @@ const Button = ({
 	fontSize,
 	fontWeight,
 }) => {
-	const { handleSubmit, isSubmitting } = useFormikContext();
 	return (
 		<View>
 			<TouchableOpacity
 				style={{
-					backgroundColor: isSubmitting ? 'gray' : colorBg,
+					backgroundColor: colorBg,
 					width: width,
 					padding: 15,
 					borderRadius: 20,
 					flexDirection: 'row',
 					justifyContent: align,
 				}}
-				onPress={isSubmitting ? null : handleSubmit}
+				onPress={submitAction}
 			>
 				<Text
 					style={{
@@ -42,4 +40,4 @@ const Button = ({
 	);
 };
 
-export default Button;
+export default RegularButton;

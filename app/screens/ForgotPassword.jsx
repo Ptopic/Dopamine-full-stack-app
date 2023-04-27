@@ -5,105 +5,111 @@ import {
 	SafeAreaView,
 	Animated,
 	TextInput,
+	TouchableOpacity,
 } from 'react-native';
 import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/core';
+
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 // Icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
 // Components
-import Header from '@Components/Header';
+import InputField from '@Components/InputField';
 import Button from '@Components/Button';
-
-// Firebase
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import { firebaseConfig } from '../firebase';
-import { initializeApp } from '@firebase/app';
+import Header from '@Components/Header';
 
 const ForgotPassword = () => {
-	const [email, setEmail] = useState();
-	const [error, setError] = useState(null);
-	const [submitted, setSubmitted] = useState(false);
+	const navigation = useNavigation();
 
-	const app = initializeApp(firebaseConfig);
-	const auth = getAuth(app);
+	const initialValues = {
+		email: '',
+	};
 
-	const resetPassword = async () => {
-		try {
-			await sendPasswordResetEmail(auth, email);
-			setSubmitted(true);
-			setError(null);
-		} catch (error) {
-			console.log(error);
-			if (error.code === 'auth/user-not-found') {
-				setError('User not found');
-			} else {
-				setError('There was a problem with your request');
-			}
-		}
+	const validationSchema = yup.object({
+		email: yup.string().email('Invalid email').required('Email is missing'),
+	});
+
+	const handlePasswordReset = (values, formikActions) => {
+		setTimeout(() => {
+			console.log(values, formikActions);
+			navigation.navigate('Login');
+			formikActions.resetForm();
+			formikActions.setSubmitting(false);
+		}, 1000);
 	};
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Starter'} color={'#0782F9'} />
+			<Header route={'Login'} color={'#1769fd'} />
 
-			{submitted ? (
-				<Text>Please check your email for a reset password link.</Text>
-			) : (
-				<View style={styles.container}>
-					<View style={styles.headerContainer}>
-						<Animated.Text
-							style={{
-								fontSize: 25,
-								fontWeight: 'bold',
-								marginBottom: 20,
-							}}
-						>
-							Forgot password?
-						</Animated.Text>
+			<View style={styles.container}>
+				<View style={styles.headerContainer}>
+					<Animated.Text
+						style={{
+							fontSize: 25,
+							fontWeight: 'bold',
+							marginBottom: 20,
+							color: 'white',
+						}}
+					>
+						Forgot password?
+					</Animated.Text>
 
-						<Text
-							style={{
-								fontSize: 14,
-								color: '#666',
-							}}
-						>
-							Enter the email associated with your account and we'll send an
-							email with instructions to reset your password.
-						</Text>
-					</View>
-
-					<View style={styles.inputView}>
-						<MaterialIcons
-							name="alternate-email"
-							size={20}
-							color="#666"
-							style={{ marginRight: 5 }}
-						/>
-						<TextInput
-							value={email}
-							onChangeText={(text) => setEmail(text)}
-							placeholder={'E-mail'}
-							keyboardType={'email-address'}
-							style={{ flex: 1, paddingVertical: 0 }}
-						/>
-					</View>
-
-					{error && <Text style={styles.error}>{error}</Text>}
-
-					<View style={styles.buttonContainer}>
-						<Button
-							label="Reset password"
-							colorBg="#0782F9"
-							colorText="white"
-							align="center"
-							submitAction={resetPassword}
-							fontWeight="bold"
-							fontSize={16}
-						></Button>
-					</View>
+					<Text
+						style={{
+							fontSize: 14,
+							color: '#666',
+							color: '#a9aec6',
+							marginBottom: 20,
+						}}
+					>
+						Enter the email associated with your account and we'll send an email
+						with instructions to reset your password.
+					</Text>
 				</View>
-			)}
+
+				<Formik
+					initialValues={initialValues}
+					validationSchema={validationSchema}
+					onSubmit={handlePasswordReset}
+				>
+					{() => {
+						return (
+							<>
+								{/* Email input field */}
+								<InputField
+									icon={
+										<MaterialIcons
+											name="alternate-email"
+											size={20}
+											color="#a9aec6"
+											style={{ marginRight: 5 }}
+										/>
+									}
+									name={'email'}
+									placeholder={'E-mail'}
+									keyboardType={'email-address'}
+								></InputField>
+
+								<View style={styles.buttonContainer}>
+									<Button
+										label="Reset password"
+										colorBg="#1769fd"
+										colorText="white"
+										align="center"
+										fontWeight="bold"
+										fontSize={16}
+									></Button>
+								</View>
+							</>
+						);
+					}}
+				</Formik>
+			</View>
 		</SafeAreaView>
 	);
 };
@@ -111,7 +117,7 @@ const ForgotPassword = () => {
 export default ForgotPassword;
 
 const styles = StyleSheet.create({
-	container: { paddingHorizontal: 25, flex: 1 },
+	container: { paddingHorizontal: 20, flex: 1 },
 	headerContainer: {
 		alignItems: 'flex-start',
 		paddingTop: 20,

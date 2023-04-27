@@ -6,6 +6,7 @@ import {
 	Animated,
 	TouchableOpacity,
 	TextInput,
+	KeyboardAvoidingView,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
@@ -31,8 +32,12 @@ const PhoneNumber = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Username'} color={'#0782F9'} title={'Step 2 of 6'} />
-			<View style={{ paddingHorizontal: 25, flex: 1 }}>
+			<Header route={'Username'} color={'#1769fd'} title={'Step 2 of 6'} />
+			<VKeyboardAvoidingView
+				behavior="padding"
+				iew
+				style={{ paddingHorizontal: 20, flex: 1 }}
+			>
 				<View
 					style={{
 						alignItems: 'flex-start',
@@ -40,20 +45,22 @@ const PhoneNumber = () => {
 						paddingBottom: 120,
 					}}
 				>
-					<Animated.Text
+					<Text
 						style={{
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
+							color: 'white',
 						}}
 					>
 						Add phone number.
-					</Animated.Text>
+					</Text>
 
 					<Text
 						style={{
 							fontSize: 14,
 							marginBottom: 10,
+							color: 'white',
 						}}
 					>
 						if you are not comfortable with it you can skip it.
@@ -63,7 +70,7 @@ const PhoneNumber = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#0782F9"
+						colorBg="#1769fd"
 						colorText="white"
 						align="center"
 						submitAction={next}
@@ -76,9 +83,9 @@ const PhoneNumber = () => {
 					style={{ alignSelf: 'center', marginTop: 20 }}
 					onPress={() => skip()}
 				>
-					<Text style={{ fontSize: 12 }}>Skip</Text>
+					<Text style={{ fontSize: 12, color: 'white' }}>Skip</Text>
 				</TouchableOpacity>
-			</View>
+			</VKeyboardAvoidingView>
 		</SafeAreaView>
 	);
 };

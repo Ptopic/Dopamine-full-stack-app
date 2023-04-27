@@ -6,19 +6,11 @@ import {
 	Animated,
 	TouchableOpacity,
 	TextInput,
+	Keyboard,
+	KeyboardAvoidingView,
 } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
-
-// Firebase
-import { firebaseConfig } from '../firebase';
-import { initializeApp } from '@firebase/app';
-import {
-	createUserWithEmailAndPassword,
-	sendEmailVerification,
-	updateProfile,
-	getAuth,
-} from 'firebase/auth';
 
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -26,6 +18,7 @@ import * as yup from 'yup';
 // Icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 // Components
 import InputField from '../components/InputField';
@@ -42,6 +35,14 @@ const SignUp = () => {
 	const [emailVal, setEmailVal] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+
+	const [long, longEnough] = useState(false);
+	const [number, hasNumber] = useState(false);
+	const [upper, hasUpper] = useState(false);
+	const [noSpaces, hasNoSpaces] = useState(false);
+
+	const [passwordError, setPasswordError] = useState('');
+
 	// const app = initializeApp(firebaseConfig);
 	// const auth = getAuth(app);
 
@@ -53,54 +54,7 @@ const SignUp = () => {
 	// const { userId, email } = useSelector((state) => state.credentials);
 	// const dispatch = useDispatch();
 
-	// const handleSignUp = async () => {
-	// 	// Check if all form data is entered then try to sign up and redirect
-
-	// 	// Check if email is in right format
-	// 	if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailVal)) {
-	// 		// If password is not same enter same password
-	// 		if (password != confirmPassword) {
-	// 			alert(
-	// 				'Please make sure that password and confirm password are matching.'
-	// 			);
-	// 		} else {
-	// 			if (email && password && confirmPassword) {
-	// 				// Go to email confirmation screen instead of registration completion screen
-	// 				const cred = await createUserWithEmailAndPassword(
-	// 					auth,
-	// 					emailVal,
-	// 					password
-	// 				)
-	// 					.then((userCredentials) => {
-	// 						const user = userCredentials.user;
-	// 						console.log('Registered with:', user.uid);
-
-	// 						// credentialsObj.userId = user.uid;
-	// 						// credentialsObj.email = user.email;
-
-	// 						// console.log(credentialsObj);
-	// 						dispatch(setCredentials({ id: user.uid, email: emailVal }));
-	// 						navigation.navigate('EmailConfirmationScreen');
-	// 					})
-	// 					.catch((error) => {
-	// 						console.log(error);
-	// 						switch (error.code) {
-	// 							case 'auth/invalid-email':
-	// 								alert('Email already in use !');
-	// 								break;
-	// 						}
-	// 					});
-	// 				await sendEmailVerification(cred.user);
-	// 			} else {
-	// 				alert('Please enter all requested data');
-	// 			}
-	// 		}
-	// 	} else {
-	// 		alert('Please enter email in right format');
-	// 	}
-
-	// 	// dispatch(setCredentials({ id: '1212', email: 'dadwadwa' }));
-	// };
+	// dispatch(setCredentials({ id: user.uid, email: emailVal }));
 
 	const navigation = useNavigation();
 
@@ -111,26 +65,34 @@ const SignUp = () => {
 
 	const validationSchema = yup.object({
 		email: yup.string().email('Invalid email').required('Email is missing'),
-		password: yup
-			.string()
-			.trim()
-			.min(8, 'Password is too short')
-			.required('Password is missing'),
 	});
 
 	const handleSignUp = (values, formikActions) => {
-		console.log(values, formikActions);
-		console.log('test');
-		formikActions.resetForm();
+		setTimeout(() => {
+			if (!long || !number || !upper || !noSpaces) {
+				setPasswordError("Your password doesn't meet the requirements");
+			} else {
+				setPasswordError('');
+				longEnough(false);
+				hasNumber(false);
+				hasUpper(false);
+				console.log(values, formikActions);
+				formikActions.resetForm();
+				navigation.navigate('EmailConfirmationScreen');
+			}
+			formikActions.setSubmitting(false);
+		}, 1000);
 	};
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Login'} color={'#0782F9'} />
-			<View style={styles.container}>
+			<Header route={'Login'} color={'#1769fd'} />
+			<KeyboardAvoidingView behavior="padding" style={styles.container}>
 				<View style={styles.headerContainer}>
 					<Animated.Text
 						style={{
 							fontSize: 25,
+							color: 'white',
 							fontWeight: 'bold',
 							marginBottom: 10,
 						}}
@@ -142,9 +104,16 @@ const SignUp = () => {
 				<Formik
 					initialValues={initialValues}
 					validationSchema={validationSchema}
+					validate={(values) => {
+						setPasswordError('');
+						values.password.length < 8 ? longEnough(false) : longEnough(true);
+						!/\d/.test(values.password) ? hasNumber(false) : hasNumber(true);
+						/\s/.test(values.password) ? hasNoSpaces(false) : hasNoSpaces(true);
+						/[A-Z]/.test(values.password) ? hasUpper(true) : hasUpper(false);
+					}}
 					onSubmit={handleSignUp}
 				>
-					{({ handleSubmit }) => {
+					{() => {
 						return (
 							<>
 								{/* Email input field */}
@@ -153,7 +122,7 @@ const SignUp = () => {
 										<MaterialIcons
 											name="alternate-email"
 											size={20}
-											color="#666"
+											color="#a9aec6"
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -168,7 +137,7 @@ const SignUp = () => {
 										<Feather
 											name="lock"
 											size={20}
-											color="#666"
+											color="#a9aec6"
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -177,14 +146,138 @@ const SignUp = () => {
 									inputType={'password'}
 								></InputField>
 
+								{/* Display password error */}
+								{passwordError ? (
+									<View>
+										<Text style={{ color: '#f44336', marginBottom: 10 }}>
+											Sorry! {passwordError}
+										</Text>
+									</View>
+								) : null}
+
+								<View style={{ paddingBottom: 40, paddingTop: 10 }}>
+									<View style={{ paddingBottom: 20 }}>
+										<Text style={{ color: 'white', fontWeight: 'bold' }}>
+											Password must have:
+										</Text>
+									</View>
+									<View
+										style={{
+											flexDirection: 'row',
+											paddingBottom: 15,
+											alignItems: 'center',
+										}}
+									>
+										{long ? (
+											<AntDesign
+												name="checkcircle"
+												size={25}
+												color="#1769fd"
+												style={{ marginRight: 10 }}
+											/>
+										) : (
+											<AntDesign
+												name="checkcircleo"
+												size={25}
+												color="#a9aec6"
+												style={{ marginRight: 10 }}
+											/>
+										)}
+
+										<Text style={{ color: long ? 'white' : '#a9aec6' }}>
+											At leats 8 characters
+										</Text>
+									</View>
+
+									<View
+										style={{
+											flexDirection: 'row',
+											paddingBottom: 15,
+											alignItems: 'center',
+										}}
+									>
+										{number ? (
+											<AntDesign
+												name="checkcircle"
+												size={25}
+												color="#1769fd"
+												style={{ marginRight: 10 }}
+											/>
+										) : (
+											<AntDesign
+												name="checkcircleo"
+												size={25}
+												color="#a9aec6"
+												style={{ marginRight: 10 }}
+											/>
+										)}
+										<Text style={{ color: number ? 'white' : '#a9aec6' }}>
+											At leats one number
+										</Text>
+									</View>
+
+									<View
+										style={{
+											flexDirection: 'row',
+											paddingBottom: 15,
+											alignItems: 'center',
+										}}
+									>
+										{upper ? (
+											<AntDesign
+												name="checkcircle"
+												size={25}
+												color="#1769fd"
+												style={{ marginRight: 10 }}
+											/>
+										) : (
+											<AntDesign
+												name="checkcircleo"
+												size={25}
+												color="#a9aec6"
+												style={{ marginRight: 10 }}
+											/>
+										)}
+										<Text style={{ color: upper ? 'white' : '#a9aec6' }}>
+											At leats one uppercase letter
+										</Text>
+									</View>
+
+									<View
+										style={{
+											flexDirection: 'row',
+											paddingBottom: 15,
+											alignItems: 'center',
+										}}
+									>
+										{noSpaces ? (
+											<AntDesign
+												name="checkcircle"
+												size={25}
+												color="#1769fd"
+												style={{ marginRight: 10 }}
+											/>
+										) : (
+											<AntDesign
+												name="checkcircleo"
+												size={25}
+												color="#a9aec6"
+												style={{ marginRight: 10 }}
+											/>
+										)}
+										<Text style={{ color: noSpaces ? 'white' : '#a9aec6' }}>
+											No spaces
+										</Text>
+									</View>
+								</View>
+
 								<View style={styles.buttonContainer}>
 									<Button
 										label="Next"
-										colorBg="#0782F9"
+										colorBg="#1769fd"
 										colorText="white"
 										align="center"
 										fontWeight="bold"
-										onPress={handleSubmit}
 										fontSize={16}
 									></Button>
 								</View>
@@ -192,7 +285,7 @@ const SignUp = () => {
 						);
 					}}
 				</Formik>
-			</View>
+			</KeyboardAvoidingView>
 
 			<View
 				style={{
@@ -217,7 +310,7 @@ const SignUp = () => {
 export default SignUp;
 
 const styles = StyleSheet.create({
-	container: { paddingHorizontal: 25, flex: 1 },
+	container: { paddingHorizontal: 20, flex: 1 },
 
 	headerContainer: {
 		alignItems: 'flex-start',

@@ -27,8 +27,8 @@ const Country = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'DateOfBirth'} color={'#0782F9'} title={'Step 5 of 6'} />
-			<View style={{ paddingHorizontal: 25, flex: 1 }}>
+			<Header route={'DateOfBirth'} color={'#1769fd'} title={'Step 5 of 6'} />
+			<View style={{ paddingHorizontal: 20, flex: 1 }}>
 				<View
 					style={{
 						alignItems: 'flex-start',
@@ -41,6 +41,7 @@ const Country = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
+							color: 'white',
 						}}
 					>
 						Where are you living?
@@ -50,6 +51,7 @@ const Country = () => {
 						style={{
 							fontSize: 14,
 							marginBottom: 10,
+							color: 'white',
 						}}
 					>
 						So that you can find people near you.
@@ -59,7 +61,7 @@ const Country = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#0782F9"
+						colorBg="#1769fd"
 						colorText="white"
 						align="center"
 						submitAction={next}
