@@ -16,7 +16,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 // Components
 import Header from '@Components/Header';
-import Button from '@Components/Button';
+import RegularButton from '@Components/Button';
 
 const Steps = () => {
 	const next = () => {
@@ -49,7 +49,7 @@ const Steps = () => {
 				</View>
 
 				<View style={styles.buttonContainer}>
-					<Button
+					<RegularButton
 						label="Continue"
 						colorBg="#1769fd"
 						colorText="white"
@@ -57,7 +57,7 @@ const Steps = () => {
 						submitAction={next}
 						fontWeight="bold"
 						fontSize={16}
-					></Button>
+					></RegularButton>
 				</View>
 			</View>
 		</SafeAreaView>

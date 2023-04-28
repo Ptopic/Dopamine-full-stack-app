@@ -41,7 +41,7 @@ const AnalyzingData = () => {
 			// Start text animation
 			// navigation.replace('Login');
 			console.log(opacityAnimation.value);
-			opacityAnimation.value = withSequence(withTiming(1, config));
+			opacityAnimation.value = withSequence(withTiming(1, 500));
 
 			// Sleep for 500 ms
 			await delay(1000);

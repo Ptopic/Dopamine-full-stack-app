@@ -18,6 +18,7 @@ import Feather from 'react-native-vector-icons/Feather';
 // Components
 import Header from '@Components/Header';
 import Button from '@Components/Button';
+import Spinner from '@Components/Spinner';
 
 const PhoneNumber = () => {
 	const next = () => {

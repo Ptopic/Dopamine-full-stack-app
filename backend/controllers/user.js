@@ -369,8 +369,7 @@ exports.verifyUser = async (req, res) => {
 					if (err) {
 						console.log(err);
 					} else {
-						console.log(info);
-						res.send('Success');
+						res.json({ success: true, message: 'User verified successfully!' });
 					}
 				});
 			});

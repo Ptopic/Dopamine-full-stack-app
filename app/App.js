@@ -42,8 +42,8 @@ export default function App() {
 			<SafeAreaProvider>
 				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
 				<NavigationContainer theme={MyTheme}>
-					{/* initialRouteName is set to Test for redux testing purposesinitialRouteName */}
-					<Stack.Navigator initialRouteName="SignUp">
+					{/* set initialRouteName to redux last visited screen */}
+					<Stack.Navigator initialRouteName="Starter">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"

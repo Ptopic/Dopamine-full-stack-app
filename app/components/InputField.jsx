@@ -45,9 +45,11 @@ const InputField = ({
 				</View>
 			) : null}
 			<View style={styles.inputView}>
-				{icon}
+				<View style={{ alignSelf: 'center' }}>{icon}</View>
 				{inputType == 'password' ? (
 					<TextInput
+						textContentType="none"
+						keyboardAppearance="dark"
 						value={value}
 						onChangeText={handleChange(name)}
 						onBlur={handleBlur(name)}
@@ -60,6 +62,8 @@ const InputField = ({
 					></TextInput>
 				) : (
 					<TextInput
+						textContentType="none"
+						keyboardAppearance="dark"
 						value={value}
 						onChangeText={handleChange(name)}
 						onBlur={handleBlur(name)}
@@ -84,11 +88,15 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		backgroundColor: '#353945',
 		paddingHorizontal: 15,
-		paddingVertical: 22,
+		paddingVertical: 12,
 		borderRadius: 16,
 		marginBottom: 25,
 	},
-	passwordInput: { flex: 1, paddingVertical: 0, color: 'white' },
-	regularInput: { flex: 1, paddingVertical: 0, color: 'white' },
+	passwordInput: { flex: 1, paddingVertical: 10, color: 'white' },
+	regularInput: {
+		flex: 1,
+		paddingVertical: 10,
+		color: 'white',
+	},
 	fieldButtonStyle: { color: '#AD40AF', fontWeight: '700' },
 });

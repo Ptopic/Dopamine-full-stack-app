@@ -9,16 +9,22 @@ import {
 	TextInput,
 	Image,
 	Easing,
+	Dimensions,
+	Keyboard,
 } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useLocation } from '@react-navigation/core';
 
 import Lottie from 'lottie-react-native';
 
 // Assets
 
+import { updateNotification } from '../utils/helper';
+import { verifyEmail } from '../utils/auth';
+
 // Components
 import Header from '@Components/Header';
+import Notification from '@Components/Notification';
 
 // Redux states
 
@@ -26,12 +32,30 @@ import { useSelector, useDispatch } from 'react-redux';
 import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
-const EmailConfirmationScreen = () => {
+let newInputIndex = 0;
+
+const inputs = Array(4).fill('');
+
+const isObjValid = (obj) => {
+	return Object.values(obj).every((val) => val.trim());
+};
+
+const EmailConfirmationScreen = (props) => {
+	const navigation = useNavigation();
+	const userId = props.route.params.userId;
+	const inputRef = useRef();
+	const [message, setMessage] = useState({
+		text: '',
+		type: '',
+	});
+	const [OTP, setOTP] = useState({ 0: '', 1: '', 2: '', 3: '' });
+	const [nextInputIndex, setNextInputIndex] = useState(0);
 	const credentials = useSelector(selectCredentials);
 
 	const animationProgress = useRef(new Animated.Value(0));
 
 	useEffect(() => {
+		console.log(userId);
 		Animated.timing(animationProgress.current, {
 			toValue: 1,
 			duration: 5000,
@@ -40,14 +64,69 @@ const EmailConfirmationScreen = () => {
 		}).start();
 	}, []);
 
+	const resetInput = () => {
+		setOTP({ 0: '', 1: '', 2: '', 3: '' });
+	};
+
 	const resendEmail = () => {
 		console.log('Email sent!');
 	};
 
+	const handleChangeText = (text, index) => {
+		const newOTP = { ...OTP };
+		newOTP[index] = text;
+		setOTP(newOTP);
+
+		newInputIndex =
+			index === inputs.length - 1 ? inputs.length - 1 : (index += 1);
+
+		console.log(index + '---' + inputs.length);
+
+		setNextInputIndex(newInputIndex);
+	};
+
+	const submitOTP = async () => {
+		Keyboard.dismiss();
+
+		// console.log(inputs);
+		resetInput();
+
+		// console.log(isObjValid(OTP));
+		if (isObjValid(OTP)) {
+			let val = '';
+
+			Object.values(OTP).forEach((v) => {
+				val += v;
+			});
+
+			const res = await verifyEmail(val, userId);
+
+			if (!res.success) return updateNotification(setMessage, res.error);
+
+			// console.log(res);
+			navigation.navigate('AnalyzingData');
+		}
+	};
+
+	useEffect(() => {
+		inputRef.current.focus;
+	}, [nextInputIndex]);
+
+	useEffect(() => {
+		if (isObjValid(OTP)) {
+			submitOTP();
+		}
+	}, [OTP]);
+
+	console.log(OTP);
+
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'SignUp'} color={'#0782F9'} />
+			{/* <Header route={'SignUp'} color={'#0782F9'} /> */}
 			<View style={{ flex: 5 }}>
+				{message.text && (
+					<Notification type={message.type} text={message.text} />
+				)}
 				<Lottie
 					source={require('../assets/images/confirmEmail.json')}
 					progress={animationProgress.current}
@@ -76,11 +155,22 @@ const EmailConfirmationScreen = () => {
 				</Text>
 
 				<View style={styles.inputView}>
-					<TextInput
-						placeholder={'6 digit otp code'}
-						placeholderTextColor={'#acb3bc'}
-						style={styles.regularInput}
-					/>
+					{inputs.map((input, index) => {
+						return (
+							<View key={index.toString()} style={styles.inputContainer}>
+								<TextInput
+									onChangeText={(text) => handleChangeText(text, index)}
+									keyboardAppearance="dark"
+									keyboardType="numeric"
+									value={OTP[index]}
+									style={styles.input}
+									maxLength={1}
+									ref={nextInputIndex === index ? inputRef : null}
+									// keyboardType="number-pad"
+								/>
+							</View>
+						);
+					})}
 				</View>
 
 				<Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>
@@ -117,6 +207,10 @@ const EmailConfirmationScreen = () => {
 
 export default EmailConfirmationScreen;
 
+const { width } = Dimensions.get('window');
+
+const inputWidth = Math.round(width / 6);
+
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: 'green',
@@ -130,11 +224,28 @@ const styles = StyleSheet.create({
 	},
 	inputView: {
 		flexDirection: 'row',
-		backgroundColor: '#353945',
-		paddingHorizontal: 15,
-		paddingVertical: 22,
-		borderRadius: 16,
+		justifyContent: 'space-between',
 		marginBottom: 40,
+		// paddingHorizontal: 15,
+		// paddingVertical: 22,
+		// borderRadius: 16,
 	},
-	regularInput: { flex: 1, paddingVertical: 0, color: 'white' },
+	inputContainer: {
+		color: 'white',
+		// justifyContent: 'center',
+		// alignItems: 'center',
+		// borderColor: 'red',
+		// borderWidth: 2,
+	},
+
+	input: {
+		width: inputWidth,
+		height: inputWidth * 1.2,
+		backgroundColor: '#353945',
+		padding: 20,
+		fontSize: 20,
+		textAlign: 'center',
+		margin: 10,
+		color: 'white',
+	},
 });

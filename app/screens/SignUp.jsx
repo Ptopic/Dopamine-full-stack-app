@@ -77,6 +77,9 @@ const SignUp = () => {
 	});
 
 	const handleSignUp = async (values, formikActions) => {
+		// !!! FOR TESTING ONLY
+		// navigation.navigate('EmailConfirmationScreen', { userId: '12' });
+
 		if (!long || !number || !upper || !noSpaces) {
 			setPasswordError("Your password doesn't meet the requirements");
 		} else {
@@ -91,7 +94,7 @@ const SignUp = () => {
 			hasUpper(false);
 
 			formikActions.resetForm();
-			navigation.navigate('EmailConfirmationScreen');
+			navigation.navigate('EmailConfirmationScreen', { userId: res.user.id });
 		}
 		formikActions.setSubmitting(false);
 	};
@@ -326,7 +329,7 @@ const SignUp = () => {
 					Already have an account?
 				</Text>
 				<TouchableOpacity onPress={() => navigation.navigate('Login')}>
-					<Text style={{ color: '#0782F9', fontWeight: '700', fontSize: 14 }}>
+					<Text style={{ color: '#1769fd', fontWeight: '700', fontSize: 14 }}>
 						{' '}
 						Login
 					</Text>

@@ -20,9 +20,10 @@ import Logo from '@Assets/images/Logo3.png';
 import RegularButton from '@Components/RegularButton';
 import Button from '@Components/Button';
 import InputField from '@Components/InputField';
+import Spinner from '../components/Spinner';
 
 const StarterScreen = () => {
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 	StatusBar.setBarStyle('dark-content', true);
 
 	const navigation = useNavigation();
@@ -34,31 +35,36 @@ const StarterScreen = () => {
 	useEffect(() => {
 		console.log('Page loaded');
 
-		setLoading(false);
+		// setLoading(false);
 
 		// Fire animations
 	}, []);
 	return (
 		<SafeAreaView style={styles.starterSatusBar}>
-			<View style={styles.starterContainer}>
-				{/* {loading ? <Text>Loading...</Text> : <Text>Not loading</Text>} */}
-				<View style={styles.imageContainer}>
-					<Image source={Logo} style={styles.image}></Image>
-				</View>
+			{loading ? (
+				<Spinner></Spinner>
+			) : (
+				<View style={styles.starterContainer}>
+					<View style={styles.imageContainer}>
+						<Image source={Logo} style={styles.image}></Image>
+					</View>
 
-				<View style={{ height: '10%' }}>
-					<RegularButton
-						label="Begin your journey"
-						colorBg="#1769fd"
-						colorText="white"
-						align="space-between"
-						icon={<MaterialIcons name="arrow-forward" size={32} color="#fff" />}
-						fontWeight="bold"
-						fontSize={16}
-						submitAction={beginJourney}
-					></RegularButton>
+					<View style={{ height: '10%' }}>
+						<RegularButton
+							label="Begin your journey"
+							colorBg="#1769fd"
+							colorText="white"
+							align="space-between"
+							icon={
+								<MaterialIcons name="arrow-forward" size={32} color="#fff" />
+							}
+							fontWeight="bold"
+							fontSize={16}
+							submitAction={beginJourney}
+						></RegularButton>
+					</View>
 				</View>
-			</View>
+			)}
 		</SafeAreaView>
 	);
 };

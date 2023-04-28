@@ -183,7 +183,7 @@ const LoginScreen = () => {
 					New to the app?
 				</Text>
 				<TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-					<Text style={{ color: '#0782F9', fontWeight: '700', fontSize: 14 }}>
+					<Text style={{ color: '#1769fd', fontWeight: '700', fontSize: 14 }}>
 						{' '}
 						Register
 					</Text>
