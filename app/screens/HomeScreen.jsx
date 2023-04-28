@@ -7,9 +7,6 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-import { firebaseConfig } from '../firebase';
-import { initializeApp } from '@firebase/app';
-import { getAuth, signOut } from 'firebase/auth';
 
 // Redux states
 
@@ -28,28 +25,28 @@ const HomeScreen = () => {
 	// 	const auth = getAuth(app);
 	// 	signOut(auth);
 	// };
-	const app = initializeApp(firebaseConfig);
-	const auth = getAuth(app);
 
 	useEffect(() => {
 		console.log('navigated');
-		console.log(credentials.userId);
+		// console.log(credentials.userId);
 	}, []);
 
 	const handleSignOut = () => {
-		const app = initializeApp(firebaseConfig);
-		const auth = getAuth(app);
-		auth.signOut().then(() => {
-			navigation.replace('Login');
-		});
+		navigation.replace('Login');
+		// const app = initializeApp(firebaseConfig);
+		// const auth = getAuth(app);
+		// auth.signOut().then(() => {
+		// 	navigation.replace('Login');
+		// });
 	};
+
 	return (
 		<KeyboardAvoidingView style={styles.container}>
-			<Text>Email: {auth.currentUser?.email}</Text>
+			{/* <Text>Email: {auth.currentUser?.email}</Text> */}
 			<TouchableOpacity onPress={handleSignOut} style={styles.button}>
 				<Text style={styles.buttonText}>Sign out</Text>
 			</TouchableOpacity>
-			<Text>{credentials.userId}</Text>
+			{/* <Text>{credentials.userId}</Text> */}
 		</KeyboardAvoidingView>
 	);
 };

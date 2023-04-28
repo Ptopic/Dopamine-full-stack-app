@@ -19,6 +19,8 @@ import Animated, {
 	withSequence,
 } from 'react-native-reanimated';
 
+import { delay } from '../utils/helper';
+
 const AnalyzingData = () => {
 	const navigation = useNavigation();
 	const animationProgress = useRef(new ReactAnimated.Value(0));
@@ -28,12 +30,6 @@ const AnalyzingData = () => {
 	const animatedStyles = useAnimatedStyle(() => ({
 		opacity: opacityAnimation.value,
 	}));
-
-	const config = {
-		duration: 500,
-	};
-
-	const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 	useEffect(() => {
 		ReactAnimated.timing(animationProgress.current, {

@@ -9,8 +9,8 @@ require('dotenv').config();
 const userRouter = require('./routes/user');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 app.use(epxress.json());
+app.use(cors());
 
 app.use('/api/user', userRouter);
 

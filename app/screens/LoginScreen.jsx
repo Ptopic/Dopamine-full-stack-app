@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 
+import { updateNotification } from '../utils/helper';
+import { signin } from '../utils/auth';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -21,6 +23,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import InputField from '@Components/InputField';
 import Button from '@Components/Button';
 import Header from '@Components/Header';
+import Notification from '../components/Notification';
 
 // Redux states
 
@@ -29,6 +32,10 @@ import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
 const LoginScreen = () => {
+	const [message, setMessage] = useState({
+		text: '',
+		type: '',
+	});
 	// const credentialsObj = {
 	// 	userId: '',
 	// 	email: '',
@@ -52,13 +59,15 @@ const LoginScreen = () => {
 			.required('Password is missing'),
 	});
 
-	const handleLogIn = (values, formikActions) => {
-		setTimeout(() => {
-			console.log(values, formikActions);
-			navigation.navigate('Home');
-			formikActions.resetForm();
-			formikActions.setSubmitting(false);
-		}, 1000);
+	const handleLogIn = async (values, formikActions) => {
+		const res = await signin(values);
+		formikActions.setSubmitting(false);
+
+		if (!res.success) return updateNotification(setMessage, res.error);
+
+		navigation.navigate('Home');
+		formikActions.resetForm();
+		console.log(res);
 	};
 
 	// const user = userCredentials.user;
@@ -71,6 +80,9 @@ const LoginScreen = () => {
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header route={'Starter'} color={'#1769fd'} />
 			<KeyboardAvoidingView behavior="padding" style={styles.container}>
+				{message.text && (
+					<Notification type={message.type} text={message.text} />
+				)}
 				<View style={styles.headerContainer}>
 					<Text
 						style={{

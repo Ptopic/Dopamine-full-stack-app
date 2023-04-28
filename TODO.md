@@ -1,5 +1,7 @@
 ## Todo list
 
+- [ ] React native -> save current screen on every page change (using useEffect on every page) and store it into global redux then in app.js load that global redux state to save screen on app exit
+
 - [ ] edit reset password page add custom logo and style input fields, make better loading spinner
 - [ ] add cron jobs to backend to remove reset tokens after one hour
 - [ ] make custom email templats for otp email, email verified, forgot password link, and password reset email

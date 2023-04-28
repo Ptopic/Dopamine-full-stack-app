@@ -73,6 +73,7 @@ exports.createUser = async (req, res, next) => {
 			});
 		}
 		res.locals.uid = uid;
+		res.locals.name = name;
 		res.locals.email = email;
 		next();
 	});
@@ -104,7 +105,6 @@ exports.createAuthToken = async (req, res) => {
 	mailTransport().sendMail(mailOptions, function (err, info) {
 		if (err) {
 			return res.status(400).send({ success: false, error: 'Cant send email' });
-		} else {
 		}
 	});
 	const sqlInsert = `INSERT INTO authTokens
@@ -115,7 +115,15 @@ exports.createAuthToken = async (req, res) => {
 		if (err) {
 			return res.status(400).send({ success: false, error: err.code });
 		}
-		return res.status(200).send({ success: true, error: 'Success' });
+		return res.status(200).json({
+			success: true,
+			user: {
+				id: res.locals.uid,
+				email: res.locals.email,
+				name: res.locals.name,
+				// Is verified
+			},
+		});
 	});
 
 	// Delete token after 10 minutes
@@ -143,40 +151,44 @@ const getUserFromEmail = (email) => {
 };
 
 exports.signIn = async (req, res) => {
-	const { email, password } = req.body;
+	try {
+		const { email, password } = req.body;
 
-	if (!email.trim() || !password.trim())
-		return res
-			.status(400)
-			.send({ success: false, error: 'Email/password missing!' });
-	// Find user with email
-	const userReturned = await getUserFromEmail(req.body.email);
-	const user = userReturned[0];
-	// If user not found send error
-	if (!user)
-		return res.status(400).send({ success: false, error: 'User not found!' });
+		if (!email.trim() || !password.trim())
+			return res
+				.status(400)
+				.send({ success: false, error: 'Email/password missing!' });
+		// Find user with email
+		const userReturned = await getUserFromEmail(req.body.email);
+		const user = userReturned[0];
+		// If user not found send error
+		if (!user)
+			return res.status(400).send({ success: false, error: 'User not found!' });
 
-	// If user is not verified return error
-	if (!user.isVerified) return sendError(res, 'User is not verified');
+		// If user is not verified return error
+		if (!user.isVerified) return sendError(res, 'User is not verified');
 
-	const isMatch = await signInUser(req.body.password, user.password);
-	if (!isMatch)
-		return res
-			.status(400)
-			.send({ success: false, error: 'Email/password not matching!' });
+		const isMatch = await signInUser(req.body.password, user.password);
+		if (!isMatch)
+			return res
+				.status(400)
+				.send({ success: false, error: 'Email/password not matching!' });
 
-	const token = jwt.sign({ userId: user.uid }, process.env.JWT_SECRET, {
-		expiresIn: '1d',
-	});
-	res.send({
-		success: true,
-		user: {
-			user: user.name,
-			email: user.email,
-			id: user.uid,
-			token: token,
-		},
-	});
+		const token = jwt.sign({ userId: user.uid }, process.env.JWT_SECRET, {
+			expiresIn: '1d',
+		});
+		res.send({
+			success: true,
+			user: {
+				user: user.name,
+				email: user.email,
+				id: user.uid,
+				token: token,
+			},
+		});
+	} catch (error) {
+		sendError(res, error.message, 500);
+	}
 };
 
 exports.resendEmailAuthentication = async (req, res) => {
@@ -429,8 +441,7 @@ exports.forgotPassword = async (req, res) => {
 			if (err) {
 				console.log(err);
 			} else {
-				console.log(info);
-				res.send('Success');
+				res.json({ success: true, message: 'Email sent!' });
 			}
 		});
 	});

@@ -12,6 +12,8 @@ import {
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
 
+import { updateNotification } from '../utils/helper';
+import { signup } from '../utils/auth';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -24,6 +26,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import InputField from '../components/InputField';
 import Header from '@Components/Header';
 import Button from '@Components/Button';
+import Notification from '@Components/Notification';
 
 // Redux states
 
@@ -32,6 +35,10 @@ import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
 const SignUp = () => {
+	const [message, setMessage] = useState({
+		text: '',
+		type: '',
+	});
 	const [emailVal, setEmailVal] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -59,35 +66,43 @@ const SignUp = () => {
 	const navigation = useNavigation();
 
 	const initialValues = {
+		name: '',
 		email: '',
 		password: '',
 	};
 
 	const validationSchema = yup.object({
+		name: yup.string().required('Name is missing'),
 		email: yup.string().email('Invalid email').required('Email is missing'),
 	});
 
-	const handleSignUp = (values, formikActions) => {
-		setTimeout(() => {
-			if (!long || !number || !upper || !noSpaces) {
-				setPasswordError("Your password doesn't meet the requirements");
-			} else {
-				setPasswordError('');
-				longEnough(false);
-				hasNumber(false);
-				hasUpper(false);
-				console.log(values, formikActions);
-				formikActions.resetForm();
-				navigation.navigate('EmailConfirmationScreen');
-			}
-			formikActions.setSubmitting(false);
-		}, 1000);
+	const handleSignUp = async (values, formikActions) => {
+		if (!long || !number || !upper || !noSpaces) {
+			setPasswordError("Your password doesn't meet the requirements");
+		} else {
+			const res = await signup(values);
+
+			if (!res.success) return updateNotification(setMessage, res.error);
+
+			console.log(res);
+			setPasswordError('');
+			longEnough(false);
+			hasNumber(false);
+			hasUpper(false);
+
+			formikActions.resetForm();
+			navigation.navigate('EmailConfirmationScreen');
+		}
+		formikActions.setSubmitting(false);
 	};
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
 			<Header route={'Login'} color={'#1769fd'} />
 			<KeyboardAvoidingView behavior="padding" style={styles.container}>
+				{message.text && (
+					<Notification type={message.type} text={message.text} />
+				)}
 				<View style={styles.headerContainer}>
 					<Animated.Text
 						style={{
@@ -116,6 +131,21 @@ const SignUp = () => {
 					{() => {
 						return (
 							<>
+								{/* Name input field */}
+								<InputField
+									icon={
+										<Feather
+											name="user"
+											size={20}
+											color="#a9aec6"
+											style={{ marginRight: 5 }}
+										/>
+									}
+									name={'name'}
+									placeholder={'Username'}
+									keyboardType={'email-address'}
+								></InputField>
+
 								{/* Email input field */}
 								<InputField
 									icon={
@@ -246,7 +276,6 @@ const SignUp = () => {
 									<View
 										style={{
 											flexDirection: 'row',
-											paddingBottom: 15,
 											alignItems: 'center',
 										}}
 									>
@@ -324,5 +353,9 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		paddingBottom: 8,
 		marginBottom: 25,
+	},
+
+	buttonContainer: {
+		paddingBottom: 20,
 	},
 });

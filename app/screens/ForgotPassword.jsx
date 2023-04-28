@@ -10,6 +10,8 @@ import {
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
 
+import { updateNotification } from '../utils/helper';
+import { forgotPassword } from '../utils/auth';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
@@ -17,12 +19,19 @@ import * as yup from 'yup';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
+import { delay } from '../utils/helper';
+
 // Components
 import InputField from '@Components/InputField';
 import Button from '@Components/Button';
 import Header from '@Components/Header';
+import Notification from '../components/Notification';
 
 const ForgotPassword = () => {
+	const [message, setMessage] = useState({
+		text: '',
+		type: '',
+	});
 	const navigation = useNavigation();
 
 	const initialValues = {
@@ -33,13 +42,19 @@ const ForgotPassword = () => {
 		email: yup.string().email('Invalid email').required('Email is missing'),
 	});
 
-	const handlePasswordReset = (values, formikActions) => {
-		setTimeout(() => {
-			console.log(values, formikActions);
-			navigation.navigate('Login');
-			formikActions.resetForm();
-			formikActions.setSubmitting(false);
-		}, 1000);
+	const handlePasswordReset = async (values, formikActions) => {
+		const res = await forgotPassword(values.email);
+		formikActions.setSubmitting(false);
+
+		if (!res.success) {
+			return updateNotification(setMessage, res.error);
+		}
+
+		console.log(res);
+		updateNotification(setMessage, res.message, 'success');
+		await delay(500);
+		formikActions.resetForm();
+		navigation.navigate('Login');
 	};
 
 	return (
@@ -47,6 +62,9 @@ const ForgotPassword = () => {
 			<Header route={'Login'} color={'#1769fd'} />
 
 			<View style={styles.container}>
+				{message.text && (
+					<Notification type={message.type} text={message.text} />
+				)}
 				<View style={styles.headerContainer}>
 					<Animated.Text
 						style={{

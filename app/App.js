@@ -43,7 +43,7 @@ export default function App() {
 				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
 				<NavigationContainer theme={MyTheme}>
 					{/* initialRouteName is set to Test for redux testing purposesinitialRouteName */}
-					<Stack.Navigator initialRouteName="Forgot">
+					<Stack.Navigator initialRouteName="SignUp">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"
