@@ -16,7 +16,22 @@ import Feather from 'react-native-vector-icons/Feather';
 
 // Components
 import Header from '@Components/Header';
-import RegularButton from '@Components/Button';
+import RegularButton from '@Components/RegularButton';
+
+// Colors
+import { colors } from '../constants/colors';
+const {
+	primary,
+	background500,
+	background400,
+	gray600,
+	gray500,
+	gray400,
+	white,
+	success,
+	error,
+	errorText,
+} = colors;
 
 const Steps = () => {
 	const next = () => {
@@ -41,7 +56,7 @@ const Steps = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						We want to get to know you better 😊
@@ -51,8 +66,8 @@ const Steps = () => {
 				<View style={styles.buttonContainer}>
 					<RegularButton
 						label="Continue"
-						colorBg="#1769fd"
-						colorText="white"
+						colorBg={primary}
+						colorText={white}
 						align="center"
 						submitAction={next}
 						fontWeight="bold"

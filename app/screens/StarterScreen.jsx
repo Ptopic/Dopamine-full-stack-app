@@ -22,6 +22,21 @@ import Button from '@Components/Button';
 import InputField from '@Components/InputField';
 import Spinner from '../components/Spinner';
 
+// Colors
+import { colors } from '../constants/colors';
+const {
+	primary,
+	background500,
+	background400,
+	gray600,
+	gray500,
+	gray400,
+	white,
+	success,
+	error,
+	errorText,
+} = colors;
+
 const StarterScreen = () => {
 	const [loading, setLoading] = useState(false);
 	StatusBar.setBarStyle('dark-content', true);
@@ -52,11 +67,11 @@ const StarterScreen = () => {
 					<View style={{ height: '10%' }}>
 						<RegularButton
 							label="Begin your journey"
-							colorBg="#1769fd"
-							colorText="white"
+							colorBg={primary}
+							colorText={white}
 							align="space-between"
 							icon={
-								<MaterialIcons name="arrow-forward" size={32} color="#fff" />
+								<MaterialIcons name="arrow-forward" size={32} color={white} />
 							}
 							fontWeight="bold"
 							fontSize={16}

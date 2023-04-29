@@ -14,7 +14,6 @@ import EmailConfirmationScreen from '@Screens/EmailConfirmationScreen';
 import Steps from '@Screens/Steps';
 import PhoneNumber from '@Screens/PhoneNumber';
 import Name from '@Screens/Name';
-import Username from '@Screens/Username';
 import DateOfBirth from '@Screens/DateOfBirth';
 import Country from '@Screens/Country';
 import Gender from '@Screens/Gender';
@@ -25,11 +24,15 @@ import store from '@Redux/store';
 
 const Stack = createNativeStackNavigator();
 
+// Colors
+import { colors } from './constants/colors';
+const { background500, white } = colors;
+
 const MyTheme = {
 	...DefaultTheme,
 	colors: {
-		background: '#141416',
-		text: 'white',
+		background: background500,
+		text: white,
 	},
 };
 // const navTheme = DefaultTheme;
@@ -43,7 +46,7 @@ export default function App() {
 				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
 				<NavigationContainer theme={MyTheme}>
 					{/* set initialRouteName to redux last visited screen */}
-					<Stack.Navigator initialRouteName="Starter">
+					<Stack.Navigator initialRouteName="Name">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"
@@ -82,38 +85,32 @@ export default function App() {
 						{/* Step 1 */}
 						<Stack.Screen
 							options={{ headerShown: false }}
-							name="Username"
-							component={Username}
+							name="Name"
+							component={Name}
 						/>
 						{/* Step 2 */}
 						<Stack.Screen
 							options={{ headerShown: false }}
-							name="PhoneNumber"
-							component={PhoneNumber}
+							name="Gender"
+							component={Gender}
 						/>
 						{/* Step 3 */}
-						<Stack.Screen
-							options={{ headerShown: false }}
-							name="Name"
-							component={Name}
-						/>
-						{/* Step 4 */}
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="DateOfBirth"
 							component={DateOfBirth}
 						/>
-						{/* Step 5 */}
+						{/* Step 4 */}
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Country"
 							component={Country}
 						/>
-						{/* Step 6 */}
+						{/* Step 5 */}
 						<Stack.Screen
 							options={{ headerShown: false }}
-							name="Gender"
-							component={Gender}
+							name="PhoneNumber"
+							component={PhoneNumber}
 						/>
 						<Stack.Screen
 							options={{ headerShown: false }}
@@ -132,11 +129,4 @@ export default function App() {
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-});
+const styles = StyleSheet.create({});

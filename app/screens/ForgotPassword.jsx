@@ -27,6 +27,10 @@ import Button from '@Components/Button';
 import Header from '@Components/Header';
 import Notification from '../components/Notification';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const ForgotPassword = () => {
 	const [message, setMessage] = useState({
 		text: '',
@@ -59,7 +63,7 @@ const ForgotPassword = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Login'} color={'#1769fd'} />
+			<Header route={'Login'} color={primary} />
 
 			<View style={styles.container}>
 				{message.text && (
@@ -71,7 +75,7 @@ const ForgotPassword = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						Forgot password?
@@ -81,7 +85,7 @@ const ForgotPassword = () => {
 						style={{
 							fontSize: 14,
 							color: '#666',
-							color: '#a9aec6',
+							color: gray500,
 							marginBottom: 20,
 						}}
 					>
@@ -104,7 +108,7 @@ const ForgotPassword = () => {
 										<MaterialIcons
 											name="alternate-email"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -116,8 +120,8 @@ const ForgotPassword = () => {
 								<View style={styles.buttonContainer}>
 									<Button
 										label="Reset password"
-										colorBg="#1769fd"
-										colorText="white"
+										colorBg={primary}
+										colorText={white}
 										align="center"
 										fontWeight="bold"
 										fontSize={16}
@@ -150,9 +154,5 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		paddingBottom: 8,
 		marginTop: 35,
-	},
-	error: {
-		marginBottom: 20,
-		color: 'red',
 	},
 });

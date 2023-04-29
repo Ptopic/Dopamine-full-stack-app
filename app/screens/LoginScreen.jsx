@@ -31,6 +31,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const LoginScreen = () => {
 	const [message, setMessage] = useState({
 		text: '',
@@ -78,7 +82,7 @@ const LoginScreen = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Starter'} color={'#1769fd'} />
+			<Header route={'Starter'} color={primary} />
 			<KeyboardAvoidingView behavior="padding" style={styles.container}>
 				{message.text && (
 					<Notification type={message.type} text={message.text} />
@@ -89,7 +93,7 @@ const LoginScreen = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 10,
-							color: '#fff',
+							color: white,
 						}}
 					>
 						Welcome back
@@ -98,7 +102,7 @@ const LoginScreen = () => {
 					<Text
 						style={{
 							marginBottom: 10,
-							color: '#fff',
+							color: white,
 						}}
 					>
 						Please enter your details.
@@ -118,7 +122,7 @@ const LoginScreen = () => {
 										<MaterialIcons
 											name="alternate-email"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -133,7 +137,7 @@ const LoginScreen = () => {
 										<Feather
 											name="lock"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -149,7 +153,7 @@ const LoginScreen = () => {
 									<Text
 										style={{
 											fontSize: 12,
-											color: '#1769fd',
+											color: primary,
 											textAlign: 'left',
 											fontWeight: 'bold',
 										}}
@@ -160,12 +164,12 @@ const LoginScreen = () => {
 
 								<View style={styles.buttonContainer}>
 									<Button
-										label="Login"
-										colorBg="#1769fd"
-										colorText="white"
+										label="Sign in"
+										colorBg={primary}
+										colorText={white}
 										align="center"
 										fontWeight="bold"
-										fontSize={16}
+										fontSize={12}
 									></Button>
 								</View>
 							</>
@@ -183,7 +187,7 @@ const LoginScreen = () => {
 					New to the app?
 				</Text>
 				<TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-					<Text style={{ color: '#1769fd', fontWeight: '700', fontSize: 14 }}>
+					<Text style={{ color: primary, fontWeight: '700', fontSize: 14 }}>
 						{' '}
 						Register
 					</Text>
@@ -210,7 +214,7 @@ const styles = StyleSheet.create({
 		marginBottom: 25,
 	},
 	input: {
-		backgroundColor: 'white',
+		backgroundColor: white,
 		paddingHorizontal: 15,
 		paddingVertical: 10,
 		borderRadius: 10,
@@ -220,25 +224,25 @@ const styles = StyleSheet.create({
 		marginTop: 40,
 	},
 	button: {
-		backgroundColor: '#0782F9',
+		backgroundColor: primary,
 		width: '100%',
 		padding: 15,
 		borderRadius: 10,
 		alignItems: 'center',
 	},
 	buttonOutline: {
-		backgroundColor: 'white',
+		backgroundColor: white,
 		marginTop: 5,
-		borderColor: '#0782F9',
+		borderColor: primary,
 		borderWidth: 2,
 	},
 	buttonText: {
-		color: 'white',
+		color: white,
 		fontWeight: '700',
 		fontSize: 16,
 	},
 	buttonOutlineText: {
-		color: '#0782F9',
+		color: primary,
 		fontWeight: '700',
 		fontSize: 16,
 	},

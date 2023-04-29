@@ -19,6 +19,10 @@ import Animated, {
 	withSequence,
 } from 'react-native-reanimated';
 
+// Colors
+import { colors } from '../constants/colors';
+const { white } = colors;
+
 import { delay } from '../utils/helper';
 
 const AnalyzingData = () => {
@@ -39,11 +43,9 @@ const AnalyzingData = () => {
 			useNativeDriver: false,
 		}).start(async () => {
 			// Start text animation
-			// navigation.replace('Login');
-			console.log(opacityAnimation.value);
 			opacityAnimation.value = withSequence(withTiming(1, 500));
 
-			// Sleep for 500 ms
+			// Sleep for 1000 ms
 			await delay(1000);
 
 			navigation.navigate('Login');
@@ -81,7 +83,7 @@ export default AnalyzingData;
 
 const styles = StyleSheet.create({
 	text: {
-		color: 'white',
+		color: white,
 		fontSize: 22,
 		fontWeight: 'bold',
 	},

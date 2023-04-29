@@ -18,6 +18,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import Header from '@Components/Header';
 import Button from '@Components/Button';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const Country = () => {
 	const next = () => {
 		navigation.replace('Gender');
@@ -27,7 +31,7 @@ const Country = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'DateOfBirth'} color={'#1769fd'} title={'Step 5 of 6'} />
+			<Header route={'DateOfBirth'} color={primary} title={'Step 5 of 6'} />
 			<View style={{ paddingHorizontal: 20, flex: 1 }}>
 				<View
 					style={{
@@ -41,7 +45,7 @@ const Country = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						Where are you living?
@@ -51,7 +55,7 @@ const Country = () => {
 						style={{
 							fontSize: 14,
 							marginBottom: 10,
-							color: 'white',
+							color: white,
 						}}
 					>
 						So that you can find people near you.
@@ -61,8 +65,8 @@ const Country = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#1769fd"
-						colorText="white"
+						colorBg={background400}
+						colorText={white}
 						align="center"
 						submitAction={next}
 						fontWeight="bold"

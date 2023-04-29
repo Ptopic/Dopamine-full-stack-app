@@ -8,6 +8,7 @@ import {
 	TextInput,
 	Keyboard,
 	KeyboardAvoidingView,
+	ScrollView,
 } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
@@ -33,6 +34,10 @@ import Notification from '@Components/Notification';
 import { useSelector, useDispatch } from 'react-redux';
 import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
+
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400, errorText } = colors;
 
 const SignUp = () => {
 	const [message, setMessage] = useState({
@@ -101,8 +106,8 @@ const SignUp = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Login'} color={'#1769fd'} />
-			<KeyboardAvoidingView behavior="padding" style={styles.container}>
+			<Header route={'Login'} color={primary} />
+			<ScrollView behavior="padding" style={styles.container}>
 				{message.text && (
 					<Notification type={message.type} text={message.text} />
 				)}
@@ -110,7 +115,7 @@ const SignUp = () => {
 					<Animated.Text
 						style={{
 							fontSize: 25,
-							color: 'white',
+							color: white,
 							fontWeight: 'bold',
 							marginBottom: 10,
 						}}
@@ -140,7 +145,7 @@ const SignUp = () => {
 										<Feather
 											name="user"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -155,7 +160,7 @@ const SignUp = () => {
 										<MaterialIcons
 											name="alternate-email"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -170,7 +175,7 @@ const SignUp = () => {
 										<Feather
 											name="lock"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -182,7 +187,7 @@ const SignUp = () => {
 								{/* Display password error */}
 								{passwordError ? (
 									<View>
-										<Text style={{ color: '#f44336', marginBottom: 10 }}>
+										<Text style={{ color: errorText, marginBottom: 10 }}>
 											Sorry! {passwordError}
 										</Text>
 									</View>
@@ -190,7 +195,7 @@ const SignUp = () => {
 
 								<View style={{ paddingBottom: 40, paddingTop: 10 }}>
 									<View style={{ paddingBottom: 20 }}>
-										<Text style={{ color: 'white', fontWeight: 'bold' }}>
+										<Text style={{ color: white, fontWeight: 'bold' }}>
 											Password must have:
 										</Text>
 									</View>
@@ -205,19 +210,19 @@ const SignUp = () => {
 											<AntDesign
 												name="checkcircle"
 												size={25}
-												color="#1769fd"
+												color={primary}
 												style={{ marginRight: 10 }}
 											/>
 										) : (
 											<AntDesign
 												name="checkcircleo"
 												size={25}
-												color="#a9aec6"
+												color={gray500}
 												style={{ marginRight: 10 }}
 											/>
 										)}
 
-										<Text style={{ color: long ? 'white' : '#a9aec6' }}>
+										<Text style={{ color: long ? white : gray500 }}>
 											At leats 8 characters
 										</Text>
 									</View>
@@ -233,18 +238,18 @@ const SignUp = () => {
 											<AntDesign
 												name="checkcircle"
 												size={25}
-												color="#1769fd"
+												color={primary}
 												style={{ marginRight: 10 }}
 											/>
 										) : (
 											<AntDesign
 												name="checkcircleo"
 												size={25}
-												color="#a9aec6"
+												color={gray500}
 												style={{ marginRight: 10 }}
 											/>
 										)}
-										<Text style={{ color: number ? 'white' : '#a9aec6' }}>
+										<Text style={{ color: number ? white : gray500 }}>
 											At leats one number
 										</Text>
 									</View>
@@ -260,18 +265,18 @@ const SignUp = () => {
 											<AntDesign
 												name="checkcircle"
 												size={25}
-												color="#1769fd"
+												color={primary}
 												style={{ marginRight: 10 }}
 											/>
 										) : (
 											<AntDesign
 												name="checkcircleo"
 												size={25}
-												color="#a9aec6"
+												color={gray500}
 												style={{ marginRight: 10 }}
 											/>
 										)}
-										<Text style={{ color: upper ? 'white' : '#a9aec6' }}>
+										<Text style={{ color: upper ? white : gray500 }}>
 											At leats one uppercase letter
 										</Text>
 									</View>
@@ -286,18 +291,18 @@ const SignUp = () => {
 											<AntDesign
 												name="checkcircle"
 												size={25}
-												color="#1769fd"
+												color={primary}
 												style={{ marginRight: 10 }}
 											/>
 										) : (
 											<AntDesign
 												name="checkcircleo"
 												size={25}
-												color="#a9aec6"
+												color={gray500}
 												style={{ marginRight: 10 }}
 											/>
 										)}
-										<Text style={{ color: noSpaces ? 'white' : '#a9aec6' }}>
+										<Text style={{ color: noSpaces ? white : gray500 }}>
 											No spaces
 										</Text>
 									</View>
@@ -306,8 +311,8 @@ const SignUp = () => {
 								<View style={styles.buttonContainer}>
 									<Button
 										label="Next"
-										colorBg="#1769fd"
-										colorText="white"
+										colorBg={primary}
+										colorText={white}
 										align="center"
 										fontWeight="bold"
 										fontSize={16}
@@ -317,7 +322,7 @@ const SignUp = () => {
 						);
 					}}
 				</Formik>
-			</KeyboardAvoidingView>
+			</ScrollView>
 
 			<View
 				style={{
@@ -329,7 +334,7 @@ const SignUp = () => {
 					Already have an account?
 				</Text>
 				<TouchableOpacity onPress={() => navigation.navigate('Login')}>
-					<Text style={{ color: '#1769fd', fontWeight: '700', fontSize: 14 }}>
+					<Text style={{ color: primary, fontWeight: '700', fontSize: 14 }}>
 						{' '}
 						Login
 					</Text>

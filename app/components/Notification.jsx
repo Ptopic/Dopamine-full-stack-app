@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 
+// Colors
+import { colors } from '../constants/colors';
+const { error, success, white } = colors;
+
 export default function Notification({ type, text }) {
-	const backgroundColor =
-		type === 'error' ? 'rgba(255,0,0,0.7)' : 'rgba(0,255,0,0.7)';
+	const backgroundColor = type === 'error' ? error : success;
 	return (
 		<View style={[styles.container, { backgroundColor }]}>
-			<Text style={{ color: '#fff', fontSize: 16 }}>{text}</Text>
+			<Text style={{ color: white, fontSize: 16 }}>{text}</Text>
 		</View>
 	);
 }

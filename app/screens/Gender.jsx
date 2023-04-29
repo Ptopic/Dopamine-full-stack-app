@@ -18,6 +18,10 @@ import Feather from 'react-native-vector-icons/Feather';
 import Header from '@Components/Header';
 import Button from '@Components/Button';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const Gender = () => {
 	const next = () => {
 		navigation.replace('RegistrationDone');
@@ -27,7 +31,7 @@ const Gender = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Country'} color={'#1769fd'} title={'Step 6 of 6'} />
+			<Header route={'Country'} color={primary} title={'Step 6 of 6'} />
 			<View style={{ paddingHorizontal: 25, flex: 1 }}>
 				<View
 					style={{
@@ -41,7 +45,7 @@ const Gender = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						Whats your gender?
@@ -51,8 +55,8 @@ const Gender = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#1769fd"
-						colorText="white"
+						colorBg={primary}
+						colorText={white}
 						align="center"
 						submitAction={next}
 						fontWeight="bold"

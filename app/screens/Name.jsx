@@ -22,6 +22,10 @@ import Header from '@Components/Header';
 import Button from '@Components/Button';
 import InputField from '@Components/InputField';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const Name = () => {
 	const [name, setName] = useState('');
 	const next = () => {
@@ -50,19 +54,9 @@ const Name = () => {
 		formikActions.resetForm();
 	};
 
-	const handleSubmit = (values, formikActions) => {
-		console.log(values, formikActions);
-		console.log('test');
-		formikActions.resetForm();
-	};
-
-	const handleBlur = (values, formikActions) => {
-		console.log('blur');
-	};
-
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'PhoneNumber'} color={'#1769fd'} title={'Step 3 of 6'} />
+			<Header route={'PhoneNumber'} color={primary} title={'Step 3 of 6'} />
 			<View style={{ paddingHorizontal: 20, flex: 1 }}>
 				<View
 					style={{
@@ -76,7 +70,7 @@ const Name = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						What's your name?
@@ -86,7 +80,7 @@ const Name = () => {
 						style={{
 							fontSize: 14,
 							marginBottom: 10,
-							color: 'white',
+							color: white,
 						}}
 					>
 						So that we know how to call you.
@@ -106,7 +100,7 @@ const Name = () => {
 										<Feather
 											name="user"
 											size={20}
-											color="#a9aec6"
+											color={gray500}
 											style={{ marginRight: 5 }}
 										/>
 									}
@@ -120,8 +114,8 @@ const Name = () => {
 								<View style={styles.buttonContainer}>
 									<Button
 										label="Continue"
-										colorBg="#1769fd"
-										colorText="white"
+										colorBg={primary}
+										colorText={white}
 										align="center"
 										submitAction={next}
 										fontWeight="bold"

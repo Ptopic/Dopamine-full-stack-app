@@ -2,6 +2,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useFormikContext } from 'formik';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, gray600 } = colors;
+
 const Button = ({
 	label,
 	colorBg,
@@ -18,7 +22,7 @@ const Button = ({
 		<View>
 			<TouchableOpacity
 				style={{
-					backgroundColor: isSubmitting ? 'gray' : colorBg,
+					backgroundColor: isSubmitting ? gray600 : colorBg,
 					width: width,
 					padding: 15,
 					borderRadius: 20,

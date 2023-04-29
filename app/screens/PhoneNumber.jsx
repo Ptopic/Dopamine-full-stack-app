@@ -20,6 +20,10 @@ import Header from '@Components/Header';
 import Button from '@Components/Button';
 import Spinner from '@Components/Spinner';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 const PhoneNumber = () => {
 	const next = () => {
 		navigation.replace('Name');
@@ -33,7 +37,7 @@ const PhoneNumber = () => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Username'} color={'#1769fd'} title={'Step 2 of 6'} />
+			<Header route={'Username'} color={primary} title={'Step 2 of 6'} />
 			<VKeyboardAvoidingView
 				behavior="padding"
 				iew
@@ -51,7 +55,7 @@ const PhoneNumber = () => {
 							fontSize: 25,
 							fontWeight: 'bold',
 							marginBottom: 20,
-							color: 'white',
+							color: white,
 						}}
 					>
 						Add phone number.
@@ -61,7 +65,7 @@ const PhoneNumber = () => {
 						style={{
 							fontSize: 14,
 							marginBottom: 10,
-							color: 'white',
+							color: white,
 						}}
 					>
 						if you are not comfortable with it you can skip it.
@@ -71,8 +75,8 @@ const PhoneNumber = () => {
 				<View style={styles.buttonContainer}>
 					<Button
 						label="Continue"
-						colorBg="#1769fd"
-						colorText="white"
+						colorBg={primary}
+						colorText={white}
 						align="center"
 						submitAction={next}
 						fontWeight="bold"
@@ -84,7 +88,7 @@ const PhoneNumber = () => {
 					style={{ alignSelf: 'center', marginTop: 20 }}
 					onPress={() => skip()}
 				>
-					<Text style={{ fontSize: 12, color: 'white' }}>Skip</Text>
+					<Text style={{ fontSize: 12, color: white }}>Skip</Text>
 				</TouchableOpacity>
 			</VKeyboardAvoidingView>
 		</SafeAreaView>

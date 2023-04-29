@@ -8,6 +8,10 @@ import {
 import React from 'react';
 import { useFormikContext } from 'formik';
 
+// Colors
+import { colors } from '../constants/colors';
+const { errorText, gray400, white, background400 } = colors;
+
 const InputField = ({
 	name,
 	placeholder,
@@ -25,23 +29,11 @@ const InputField = ({
 	const error = errors[name];
 	const isInputTouched = touched[name];
 
-	focusedInput = () => {
-		this.textInput.setNativeProps({
-			style: { backgroundColor: 'green' },
-		});
-	};
-
-	blurredInput = () => {
-		this.textInput.setNativeProps({
-			style: { backgroundColor: 'yellow' },
-		});
-	};
-
 	return (
 		<>
 			{error && isInputTouched ? (
 				<View>
-					<Text style={{ color: '#f44336', marginBottom: 10 }}>{error}</Text>
+					<Text style={{ color: errorText, marginBottom: 10 }}>{error}</Text>
 				</View>
 			) : null}
 			<View style={styles.inputView}>
@@ -54,7 +46,7 @@ const InputField = ({
 						onChangeText={handleChange(name)}
 						onBlur={handleBlur(name)}
 						placeholder={placeholder}
-						placeholderTextColor={'#acb3bc'}
+						placeholderTextColor={gray400}
 						keyboardType={keyboardType}
 						style={styles.passwordInput}
 						secureTextEntry={true}
@@ -68,7 +60,7 @@ const InputField = ({
 						onChangeText={handleChange(name)}
 						onBlur={handleBlur(name)}
 						placeholder={placeholder}
-						placeholderTextColor={'#acb3bc'}
+						placeholderTextColor={gray400}
 						keyboardType={keyboardType}
 						style={styles.regularInput}
 					/>
@@ -86,17 +78,17 @@ export default InputField;
 const styles = StyleSheet.create({
 	inputView: {
 		flexDirection: 'row',
-		backgroundColor: '#353945',
+		backgroundColor: background400,
 		paddingHorizontal: 15,
 		paddingVertical: 12,
 		borderRadius: 16,
 		marginBottom: 25,
 	},
-	passwordInput: { flex: 1, paddingVertical: 10, color: 'white' },
+	passwordInput: { flex: 1, paddingVertical: 10, color: white },
 	regularInput: {
 		flex: 1,
 		paddingVertical: 10,
-		color: 'white',
+		color: white,
 	},
 	fieldButtonStyle: { color: '#AD40AF', fontWeight: '700' },
 });

@@ -32,6 +32,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { reset, setCredentials } from '@Redux/slices/credentialsReducer';
 import { selectCredentials } from '@Redux/slices/credentialsReducer';
 
+// Colors
+import { colors } from '../constants/colors';
+const { primary, white, background400, gray500, gray400 } = colors;
+
 let newInputIndex = 0;
 
 const inputs = Array(4).fill('');
@@ -88,10 +92,8 @@ const EmailConfirmationScreen = (props) => {
 	const submitOTP = async () => {
 		Keyboard.dismiss();
 
-		// console.log(inputs);
 		resetInput();
 
-		// console.log(isObjValid(OTP));
 		if (isObjValid(OTP)) {
 			let val = '';
 
@@ -103,7 +105,6 @@ const EmailConfirmationScreen = (props) => {
 
 			if (!res.success) return updateNotification(setMessage, res.error);
 
-			// console.log(res);
 			navigation.navigate('AnalyzingData');
 		}
 	};
@@ -122,7 +123,7 @@ const EmailConfirmationScreen = (props) => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			{/* <Header route={'SignUp'} color={'#0782F9'} /> */}
+			{/* <Header route={'SignUp'} color={primary} /> */}
 			<View style={{ flex: 5 }}>
 				{message.text && (
 					<Notification type={message.type} text={message.text} />
@@ -148,7 +149,7 @@ const EmailConfirmationScreen = (props) => {
 						fontSize: 20,
 						textAlign: 'center',
 						paddingBottom: 30,
-						color: 'white',
+						color: white,
 					}}
 				>
 					Confirm your email address
@@ -173,16 +174,14 @@ const EmailConfirmationScreen = (props) => {
 					})}
 				</View>
 
-				<Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>
+				<Text style={{ textAlign: 'center', fontSize: 14, color: white }}>
 					We sent a confirmation email to:
 				</Text>
-				<Text
-					style={{ fontWeight: 'bold', paddingVertical: 20, color: 'white' }}
-				>
+				<Text style={{ fontWeight: 'bold', paddingVertical: 20, color: white }}>
 					{credentials.email}
 				</Text>
 
-				<Text style={{ textAlign: 'center', fontSize: 14, color: 'white' }}>
+				<Text style={{ textAlign: 'center', fontSize: 14, color: white }}>
 					Check your email and enter 6 digit code to continue.
 				</Text>
 			</View>
@@ -196,7 +195,7 @@ const EmailConfirmationScreen = (props) => {
 				}}
 			>
 				<TouchableOpacity onPress={resendEmail}>
-					<Text style={{ color: '#0782F9', fontWeight: '700', fontSize: 14 }}>
+					<Text style={{ color: primary, fontWeight: '700', fontSize: 14 }}>
 						Resend email
 					</Text>
 				</TouchableOpacity>
@@ -231,7 +230,7 @@ const styles = StyleSheet.create({
 		// borderRadius: 16,
 	},
 	inputContainer: {
-		color: 'white',
+		color: white,
 		// justifyContent: 'center',
 		// alignItems: 'center',
 		// borderColor: 'red',
@@ -241,11 +240,11 @@ const styles = StyleSheet.create({
 	input: {
 		width: inputWidth,
 		height: inputWidth * 1.2,
-		backgroundColor: '#353945',
+		backgroundColor: background400,
 		padding: 20,
 		fontSize: 20,
 		textAlign: 'center',
 		margin: 10,
-		color: 'white',
+		color: white,
 	},
 });
