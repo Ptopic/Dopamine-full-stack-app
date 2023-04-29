@@ -46,7 +46,7 @@ export default function App() {
 				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
 				<NavigationContainer theme={MyTheme}>
 					{/* set initialRouteName to redux last visited screen */}
-					<Stack.Navigator initialRouteName="Name">
+					<Stack.Navigator initialRouteName="Country">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"

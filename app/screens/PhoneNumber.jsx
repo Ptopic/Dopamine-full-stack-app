@@ -11,34 +11,56 @@ import {
 import React, { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/core';
 
+// Formik
+import { updateNotification } from '../utils/helper';
+import { signin } from '../utils/auth';
+import { Formik } from 'formik';
+import * as yup from 'yup';
+
 // Icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 
 // Components
 import Header from '@Components/Header';
+import InputField from '../components/InputField';
 import Button from '@Components/Button';
 import Spinner from '@Components/Spinner';
+import StepsDisplay from '../components/StepsDisplay';
 
 // Colors
 import { colors } from '../constants/colors';
 const { primary, white, background400, gray500, gray400 } = colors;
 
 const PhoneNumber = () => {
-	const next = () => {
-		navigation.replace('Name');
-	};
+	const navigation = useNavigation();
 
 	const skip = () => {
-		navigation.replace('Name');
+		navigation.replace('AnalyzingData');
 	};
 
-	const navigation = useNavigation();
+	const initialValues = {
+		phone: '',
+	};
+
+	const validationSchema = yup.object({
+		phone: yup.string().required('Phone number is missing'),
+	});
+
+	const next = (values, formikActions) => {
+		console.log(values, formikActions);
+		formikActions.resetForm();
+		navigation.replace('AnalyzingData');
+	};
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
-			<Header route={'Username'} color={primary} title={'Step 2 of 6'} />
-			<VKeyboardAvoidingView
+			<Header
+				route={'Country'}
+				color={primary}
+				el={<StepsDisplay active={5} numOfSteps={5}></StepsDisplay>}
+			/>
+			<KeyboardAvoidingView
 				behavior="padding"
 				iew
 				style={{ paddingHorizontal: 20, flex: 1 }}
@@ -72,17 +94,40 @@ const PhoneNumber = () => {
 					</Text>
 				</View>
 
-				<View style={styles.buttonContainer}>
-					<Button
-						label="Continue"
-						colorBg={primary}
-						colorText={white}
-						align="center"
-						submitAction={next}
-						fontWeight="bold"
-						fontSize={16}
-					></Button>
-				</View>
+				<Formik
+					initialValues={initialValues}
+					validationSchema={validationSchema}
+					onSubmit={next}
+				>
+					{() => {
+						return (
+							<>
+								<InputField
+									icon={
+										<Feather
+											name="user"
+											size={20}
+											color={gray500}
+											style={{ marginRight: 5 }}
+										/>
+									}
+									name={'phone'}
+									placeholder={'phone'}
+								></InputField>
+								<View style={styles.buttonContainer}>
+									<Button
+										label="Next"
+										colorBg={primary}
+										colorText={white}
+										align="center"
+										fontWeight="bold"
+										fontSize={16}
+									></Button>
+								</View>
+							</>
+						);
+					}}
+				</Formik>
 
 				<TouchableOpacity
 					style={{ alignSelf: 'center', marginTop: 20 }}
@@ -90,7 +135,7 @@ const PhoneNumber = () => {
 				>
 					<Text style={{ fontSize: 12, color: white }}>Skip</Text>
 				</TouchableOpacity>
-			</VKeyboardAvoidingView>
+			</KeyboardAvoidingView>
 		</SafeAreaView>
 	);
 };
