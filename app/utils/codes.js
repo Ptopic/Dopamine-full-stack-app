@@ -1,10 +1,20 @@
 import client from '../api/client';
 
-export const getCode = async (code) => {
+const catchError = (error) => {
+	if (error?.response?.data) {
+		return error.response.data;
+	} else {
+		return { success: false, error: error.message };
+	}
+};
+
+export const getCode = async (codeVal) => {
 	try {
-		const { data } = await client.get('/code/phone-code', { code });
+		const { data } = await client.get('/code/phone-code', {
+			params: { code: codeVal },
+		});
 		return data;
 	} catch (error) {
-		console.log(error.toJSON());
+		return catchError(error);
 	}
 };

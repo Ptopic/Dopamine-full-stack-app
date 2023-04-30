@@ -46,6 +46,7 @@ const PhoneNumber = () => {
 	const [data, setData] = useState([]);
 	const [formatedData, setFormatedData] = useState([]);
 	const [countryValue, setCountryValue] = useState('');
+	const [currentFlag, setCurrentFlag] = useState('');
 	const [phoneCode, setPhoneCode] = useState('+000');
 	const [query, setQuery] = useState('');
 	const [isOpen, setIsOpen] = useState(false);
@@ -84,6 +85,14 @@ const PhoneNumber = () => {
 		setIsOpen(!isOpen);
 	};
 
+	const dropDownItemPress = (id) => {
+		console.log(id);
+		setSelectedId(id);
+		setIsOpen(false);
+		setPhoneCode(formatedData[id].dial);
+		setCurrentFlag(formatedData[id].flag);
+	};
+
 	// Search
 
 	const handleOnChangeQuery = (value) => {
@@ -100,11 +109,25 @@ const PhoneNumber = () => {
 		return (
 			<DropdownItem
 				item={item}
-				onPress={() => setSelectedId(item.index)}
+				onPress={() => dropDownItemPress(item.index)}
 				backgroundColor={backgroundColor}
 				textColor={color}
 			/>
 		);
+	};
+
+	const sortFunction = (a, b) => {
+		const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+		const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+		if (nameA < nameB) {
+			return -1;
+		}
+		if (nameA > nameB) {
+			return 1;
+		}
+
+		// names must be equal
+		return 0;
 	};
 
 	const formatCountryData = async () => {
@@ -114,21 +137,37 @@ const PhoneNumber = () => {
 		// flag
 		// code to get phone code
 		// Phone code
-		console.log(data[0]['name']['common']);
-		console.log(data[0]['flags']['png']);
-		console.log(data[0]['cca2']);
+		let name = data[0]['name']['common'];
+		let flag = data[0]['flags']['png'];
+		let cca = data[0]['cca2'];
 
 		// Get phone code by cca2
-		const res = await getCode(String(data[0]['cca2']));
-		console.log(res);
+		const res = await getCode(cca);
+		let dialCode = res.dial;
 
 		// Set errror if failed
 		// if (!res.success) return updateNotification(setMessage, res.error);
 
-		data.forEach((element, index) => {
-			// console.log(element);
+		data.forEach(async (element, index) => {
+			let name = element['name']['common'];
+			let flag = element['flags']['png'];
+			let cca = element['cca2'];
+
+			const res = await getCode(cca);
+			let dialCode = res.dial;
+
+			if (dialCode) {
+				let object = {
+					id: index,
+					name: name + ' ' + '(' + dialCode + ')',
+					flag: flag,
+					dial: dialCode,
+				};
+				objectsArray.push(object);
+				objectsArray.sort(sortFunction);
+			}
 		});
-		// setFormatedData(objectsArray);
+		setFormatedData(objectsArray);
 	};
 
 	useEffect(() => {
@@ -138,12 +177,11 @@ const PhoneNumber = () => {
 				setData(res.data);
 			})
 			.catch((error) => {
-				console.log(error);
+				// console.log(error);
 			});
 	}, []);
 
 	useEffect(() => {
-		console.log('datachanged');
 		formatCountryData();
 	}, [data]);
 
@@ -201,6 +239,7 @@ const PhoneNumber = () => {
 									style={{ marginRight: 5 }}
 								/>
 							}
+							flagUrl={currentFlag}
 							isOpen={isOpen}
 							onPress={openDropDown}
 						/>
@@ -239,28 +278,33 @@ const PhoneNumber = () => {
 						}}
 					>
 						<View style={styles.searchView}>
-							<Feather
-								name="search"
-								size={24}
-								color={gray400}
-								style={{
-									marginRight: 15,
-									flexDirection: 'row',
-									alignItems: 'center',
-									justifyContent: 'center',
-								}}
-							/>
-							<TextInput
-								textContentType="none"
-								keyboardAppearance="dark"
-								value={query}
-								onChangeText={(text) => handleOnChangeQuery(text)}
-								onFocus={handleFocusSearch}
-								onBlur={handleUnFocusSearch}
-								placeholder={'Search'}
-								placeholderTextColor={gray400}
-								style={styles.dropDownSearch}
-							/>
+							<View style={{ alignItems: 'center', justifyContent: 'center' }}>
+								<Feather
+									name="search"
+									size={24}
+									color={gray400}
+									style={{
+										marginRight: 15,
+										flexDirection: 'row',
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								/>
+							</View>
+
+							<View>
+								<TextInput
+									textContentType="none"
+									keyboardAppearance="dark"
+									value={query}
+									onChangeText={(text) => handleOnChangeQuery(text)}
+									onFocus={handleFocusSearch}
+									onBlur={handleUnFocusSearch}
+									placeholder={'Search'}
+									placeholderTextColor={gray400}
+									style={styles.dropDownSearch}
+								/>
+							</View>
 						</View>
 
 						<FlatList
@@ -269,7 +313,7 @@ const PhoneNumber = () => {
 								borderBottomLeftRadius: 16,
 								borderBottomRightRadius: 16,
 							}}
-							data={countries}
+							data={formatedData}
 							renderItem={renderItem}
 							keyExtractor={(item) => item.id}
 						></FlatList>
@@ -325,7 +369,7 @@ const styles = StyleSheet.create({
 		borderTopRightRadius: 16,
 	},
 	dropDownSearch: {
-		width: '100%',
+		width: 300,
 		fontSize: 16,
 		color: white,
 		height: 50,

@@ -30,7 +30,6 @@ const StepsDisplay = ({ active, numOfSteps }) => {
 		>
 			{steps.map((input, index) => {
 				const activeColor = index === active - 1 ? primary : background400;
-				console.log(activeColor);
 				return (
 					<View
 						key={index}

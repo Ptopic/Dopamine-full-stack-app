@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Pressable, Image } from 'react-native';
 import React from 'react';
 
 const DropdownItem = ({ item, onPress, backgroundColor, textColor }) => {
-	console.log(item.item.name);
 	return (
 		<Pressable
 			onPress={onPress}

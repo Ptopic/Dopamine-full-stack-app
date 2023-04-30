@@ -8,6 +8,7 @@ const Dropdown = ({
 	selectedIcon,
 	onPress,
 	isOpen,
+	flagUrl,
 }) => {
 	return (
 		<Pressable style={styles.dropDownView} onPress={onPress}>
@@ -16,7 +17,7 @@ const Dropdown = ({
 					style={{ width: 60, alignItems: 'center', justifyContent: 'center' }}
 				>
 					<Image
-						source={{ uri: 'https://flagcdn.com/w320/hr.png' }}
+						source={{ uri: flagUrl }}
 						style={{ width: '70%', height: '70%' }}
 						resizeMode="contain"
 					></Image>
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		height: '100%',
 		flexDirection: 'row',
 		paddingHorizontal: 10,
 		borderTopLeftRadius: 16,
