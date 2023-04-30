@@ -13,6 +13,7 @@ import {
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/core';
 import axios from 'axios';
+import { getCode } from '../utils/codes';
 
 // Formik
 import { updateNotification } from '../utils/helper';
@@ -43,6 +44,7 @@ const { primary, white, background400, gray500, gray400 } = colors;
 
 const PhoneNumber = () => {
 	const [data, setData] = useState([]);
+	const [formatedData, setFormatedData] = useState([]);
 	const [countryValue, setCountryValue] = useState('');
 	const [phoneCode, setPhoneCode] = useState('+000');
 	const [query, setQuery] = useState('');
@@ -65,13 +67,14 @@ const PhoneNumber = () => {
 		navigation.replace('AnalyzingData');
 	};
 
-	const next = () => {};
+	const next = () => {
+		// Check if input field is empty
+		navigation.replace('AnalyzingData');
+	};
 
 	const handleFocus = () => {};
 
 	const handleUnFocus = () => {};
-
-	const handlePress = (index) => {};
 
 	const handleOnChange = (value) => {
 		setCountryValue(value);
@@ -104,19 +107,45 @@ const PhoneNumber = () => {
 		);
 	};
 
+	const formatCountryData = async () => {
+		let objectsArray = [];
+		// Id -> index
+		// name
+		// flag
+		// code to get phone code
+		// Phone code
+		console.log(data[0]['name']['common']);
+		console.log(data[0]['flags']['png']);
+		console.log(data[0]['cca2']);
+
+		// Get phone code by cca2
+		const res = await getCode(String(data[0]['cca2']));
+		console.log(res);
+
+		// Set errror if failed
+		// if (!res.success) return updateNotification(setMessage, res.error);
+
+		data.forEach((element, index) => {
+			// console.log(element);
+		});
+		// setFormatedData(objectsArray);
+	};
+
 	useEffect(() => {
 		axios
-			.get('https://restcountries.com/v3.1/all')
+			.get('https://restcountries.com/v3.1/all?fields=name,flags,cca2')
 			.then((res) => {
 				setData(res.data);
-				console.log(res.data[55]);
-				// console.log(data[0]['name']['common']);
-				// console.log(data[0]['flags']['svg']);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
 	}, []);
+
+	useEffect(() => {
+		console.log('datachanged');
+		formatCountryData();
+	}, [data]);
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
