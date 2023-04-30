@@ -7,12 +7,14 @@ const port = 3001;
 require('dotenv').config();
 
 const userRouter = require('./routes/user');
+const codesRouter = require('./routes/codes');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(epxress.json());
 app.use(cors());
 
 app.use('/api/user', userRouter);
+app.use('/api/code', codesRouter);
 
 // app.get('/login', (req, res) => {
 // 	const sqlSelect = `SELECT * FROM fonts`;

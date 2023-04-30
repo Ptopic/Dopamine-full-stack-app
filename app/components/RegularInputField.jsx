@@ -17,6 +17,7 @@ const RegularInputField = ({
 	value,
 	placeholder,
 	icon,
+	info,
 	inputType,
 	keyboardType,
 	fieldButtonLabel,
@@ -29,6 +30,11 @@ const RegularInputField = ({
 	return (
 		<View style={styles.inputView}>
 			<View style={{ alignSelf: 'center' }}>{icon}</View>
+			<Text
+				style={{ alignSelf: 'center', marginHorizontal: 10, color: gray400 }}
+			>
+				{info}
+			</Text>
 			{inputType == 'password' ? (
 				<TextInput
 					textContentType="none"

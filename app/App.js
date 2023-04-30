@@ -5,20 +5,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Screens
-import LoginScreen from '@Screens/LoginScreen';
-import ForgotPassword from '@Screens/ForgotPassword';
-import HomeScreen from '@Screens/HomeScreen';
-import StarterScreen from '@Screens/StarterScreen';
-import SignUp from '@Screens/SignUp';
-import EmailConfirmationScreen from '@Screens/EmailConfirmationScreen';
-import Steps from '@Screens/Steps';
-import PhoneNumber from '@Screens/PhoneNumber';
-import Name from '@Screens/Name';
-import DateOfBirth from '@Screens/DateOfBirth';
-import Country from '@Screens/Country';
-import Gender from '@Screens/Gender';
-import Test from '@Screens/Test';
-import AnalyzingData from '@Screens/AnalyzingData';
+import LoginScreen from './screens/LoginScreen';
+import ForgotPassword from './screens/ForgotPassword';
+import HomeScreen from './screens/HomeScreen';
+import StarterScreen from './screens/StarterScreen';
+import SignUp from './screens/SignUp';
+import EmailConfirmationScreen from './screens/EmailConfirmationScreen';
+import Steps from './screens/Steps';
+import PhoneNumber from './screens/PhoneNumber';
+import Name from './screens/Name';
+import DateOfBirth from './screens/DateOfBirth';
+import Country from './screens/Country';
+import Gender from './screens/Gender';
+import Test from './screens/Test';
+import AnalyzingData from './screens/AnalyzingData';
 import { Provider } from 'react-redux';
 import store from '@Redux/store';
 
@@ -46,7 +46,7 @@ export default function App() {
 				<StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
 				<NavigationContainer theme={MyTheme}>
 					{/* set initialRouteName to redux last visited screen */}
-					<Stack.Navigator initialRouteName="Country">
+					<Stack.Navigator initialRouteName="PhoneNumber">
 						<Stack.Screen
 							options={{ headerShown: false }}
 							name="Starter"

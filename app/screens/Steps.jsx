@@ -35,7 +35,7 @@ const {
 
 const Steps = () => {
 	const next = () => {
-		navigation.replace('Username');
+		navigation.navigate('Name');
 	};
 
 	const navigation = useNavigation();

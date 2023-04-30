@@ -83,14 +83,6 @@ const Country = () => {
 		setFormatedData(newData);
 	};
 
-	const initialValues = {
-		country: '',
-	};
-
-	const validationSchema = yup.object({
-		country: yup.string().required('Country is missing'),
-	});
-
 	const next = () => {
 		if (countryValue == '') {
 			setError('Country is required');

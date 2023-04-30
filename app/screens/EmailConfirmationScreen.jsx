@@ -105,7 +105,7 @@ const EmailConfirmationScreen = (props) => {
 
 			if (!res.success) return updateNotification(setMessage, res.error);
 
-			navigation.navigate('AnalyzingData');
+			navigation.navigate('Steps');
 		}
 	};
 
