@@ -37,17 +37,18 @@
 
 <div align='center'>
 
+<img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/0a1a893f-0af4-4130-a7f6-14d6c9b827bd" width="300">
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/8c5dc583-65dd-43a5-8093-fbab715fe2a6" width="300">
 
 </div>
 
 <br>
 
-## Register screen
+## Forgot password
 
 <div align='center'>
 
-<img src="" width="300">
+<img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/a4fafd46-ed08-4cca-8fb0-44ba4fd8b55a" width="300">
 
 </div>
 
