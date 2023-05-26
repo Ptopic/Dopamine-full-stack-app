@@ -17,7 +17,7 @@
 
 <div align='center'>
 
-![76e08f15-ae0b-4da0-b430-dea9dbb0885d](https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/d4228538-ec5a-4c65-be7a-1ad6e5e7dc74 =250x250)
+<img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/d4228538-ec5a-4c65-be7a-1ad6e5e7dc74" width="100">
 
 </div>
 
