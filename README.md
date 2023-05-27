@@ -71,7 +71,7 @@
 
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/592c5b5d-962b-4c7c-aef3-1c586615f02f" width="300">
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/a762732e-c4c5-40ba-b394-f4a67b44e6ae" width="300">
-<img src="" width="300">
+<img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/90094081-0bb0-4c2f-b961-d9492536571e" width="300">
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/3896cbe0-a16c-4ddd-ae4c-a37a947e22ba" width="300">
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/e68330d7-7b20-45c6-a090-d9dd7c303e8c" width="300">
 <img src="https://github.com/Ptopic/Dopamine-full-stack-app/assets/45322112/e8abd45c-5e57-4845-a2f8-bd8ccd543a69" width="300">
